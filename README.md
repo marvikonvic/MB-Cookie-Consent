@@ -2,7 +2,7 @@
 
 ## Srpski (latinica)
 
-Samostalan WordPress dodatak za dvojezični baner za kolačiće i blokiranje opcionih skripti pre saglasnosti. Namenjen je standardnim i klasičnim WordPress frontendima, uključujući Blogsy.
+Samostalan WordPress dodatak za dvojezični baner za kolačiće i blokiranje opcionih skripti pre saglasnosti. Namenjen je standardnim i klasičnim WordPress frontendima.
 
 ### Funkcije
 
@@ -53,7 +53,7 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 
 ## English
 
-Standalone WordPress plugin providing a bilingual cookie banner and prior blocking of optional scripts. It is designed for standard and classic WordPress frontends, including Blogsy.
+Standalone WordPress plugin providing a bilingual cookie banner and prior blocking of optional scripts. It is designed for standard and classic WordPress frontends.
 
 ### Features
 
