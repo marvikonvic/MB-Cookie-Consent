@@ -17,7 +17,6 @@ Samostalan WordPress dodatak za dvojezični baner za kolačiće i blokiranje opc
 - izbor izgleda: puna traka, plutajuća kartica levo, desno ili u sredini;
 - povlačenje ili promena saglasnosti;
 - shortcode `[mbcc_cookie_settings]`;
-- izolovan CSS koji ne menja Blogsy elemente i raspored.
 
 ### Instalacija i podešavanje
 
@@ -68,7 +67,6 @@ Standalone WordPress plugin providing a bilingual cookie banner and prior blocki
 - four layouts: full-width bar or a floating card aligned left, right or centre;
 - consent withdrawal/change control;
 - `[mbcc_cookie_settings]` shortcode;
-- isolated CSS that does not alter Blogsy layout elements.
 
 ### Important limitations
 
