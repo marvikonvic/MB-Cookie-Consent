@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, script blocker, bilingual, google consent mode
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,6 +70,11 @@ Use shortcode `[mbcc_cookie_settings]`.
 4. Serbian Latin translation of the WordPress administration settings.
 
 == Changelog ==
+
+= 1.0.7 =
+
+* Correct the Serbian description of the necessary category when visitors are allowed to disable it.
+* Upgrade only the exact obsolete stock description on existing installations; customized text remains unchanged.
 
 = 1.0.6 =
 

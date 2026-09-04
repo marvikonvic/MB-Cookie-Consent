@@ -9,6 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 class MBCC_Settings {
 	const OPTION_NAME = 'mbcc_settings';
+	const LEGACY_NECESSARY_DESC_SR = 'Potrebni su za bezbednost i osnovne funkcije sajta. Ne mogu se isključiti.';
 
 	/**
 	 * Default frontend text in both supported languages.
@@ -106,6 +107,7 @@ class MBCC_Settings {
 		if ( ! is_array( $saved ) ) {
 			$saved = array();
 		}
+		$saved = self::replace_legacy_default_texts( $saved );
 
 		$options = wp_parse_args( $saved, self::defaults() );
 		$texts   = self::default_texts();
@@ -113,6 +115,24 @@ class MBCC_Settings {
 		$options['text_sr'] = wp_parse_args( isset( $saved['text_sr'] ) && is_array( $saved['text_sr'] ) ? $saved['text_sr'] : array(), $texts['sr'] );
 
 		return apply_filters( 'mbcc_settings', $options );
+	}
+
+	/**
+	 * Replace obsolete stock wording without changing customized text.
+	 *
+	 * @param array<string,mixed> $settings Stored settings.
+	 * @return array<string,mixed>
+	 */
+	public static function replace_legacy_default_texts( $settings ) {
+		if (
+			isset( $settings['text_sr']['necessary_desc'] ) &&
+			self::LEGACY_NECESSARY_DESC_SR === $settings['text_sr']['necessary_desc']
+		) {
+			$texts = self::default_texts();
+			$settings['text_sr']['necessary_desc'] = $texts['sr']['necessary_desc'];
+		}
+
+		return $settings;
 	}
 
 	/** Register admin hooks. */

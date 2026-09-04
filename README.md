@@ -1,48 +1,56 @@
-# MB Cookie Consent 1.0.6
+![MB Cookie Consent banner](.wordpress-org/banner-1544x500.png)
 
-## 1.0.6 — WordPress.org priprema / WordPress.org preparation
+# MB Cookie Consent 1.0.7
 
-- SR: Ažurirani su WordPress.org metapodaci, dokumentacija privatnosti i listing resursi.
-- EN: WordPress.org metadata, privacy documentation and directory listing assets are prepared.
-- SR: Dodat je POT katalog i kompletan prevod WordPress Admin interfejsa za `sr_RS_latin`. Engleski ostaje izvorni jezik.
-- EN: A POT catalogue and a complete `sr_RS_latin` WordPress Admin translation are included. English remains the source language.
+## English
 
-## 1.0.5 — Google Site Kit podrazumevana pravila / Google Site Kit defaults
+Standalone WordPress plugin providing a bilingual cookie banner and prior blocking of optional scripts. It is designed for standard and classic WordPress frontends.
 
-- SR: Google Tag (`googletagmanager.com/gtag/js`) i Google Site Kit events provider sada su podrazumevano blokirani kao analitika do pristanka.
-- EN: Google Tag (`googletagmanager.com/gtag/js`) and the Google Site Kit events provider are now blocked as analytics by default until consent.
-- SR: Postojeće instalacije jednokratno dobijaju samo nedostajuća pravila. Ručna pravila, njihove kategorije, druga podešavanja i postojeće saglasnosti se ne menjaju.
-- EN: Existing installations receive only missing rules once. Custom rules and categories, other settings, and existing consent records remain unchanged.
-- SR/EN: Google Ads `AW-` obrazac ostaje marketing / The Google Ads `AW-` pattern remains marketing.
-- SR/EN: Posle ažuriranja očistiti page/CDN/browser keš / Clear page, CDN and browser caches after updating.
+### Features
 
-## 1.0.4 — Ispravke / Fixes
+- Serbian Latin and English;
+- automatic WordPress, Polylang and WPML language detection;
+- necessary, preferences, analytics and marketing categories;
+- necessary is selected by default but can be disabled manually by the visitor;
+- accept all, reject optional and granular choices;
+- blocking by WordPress script handle and URL pattern;
+- placeholders for YouTube, Vimeo and Google Maps;
+- Google Consent Mode v2;
+- four layouts: full-width bar or a floating card aligned left, right or centre;
+- consent withdrawal/change control;
+- `[mbcc_cookie_settings]` shortcode.
 
-- SR: Inicijalizacija čeka da DOM bude spreman, pa plutajuće dugme otvara podešavanja i bez odlaganja JavaScripta. Ako je DOM već spreman, inicijalizacija počinje odmah.
-- EN: Initialization waits for DOM readiness so the floating settings control works without a script-delay plugin; scripts loaded after DOM readiness initialize immediately.
-- SR: Sopstvena frontend skripta i njena inline konfiguracija (`MBCC_CONFIG`) izuzete su iz MBCC blokiranja, čak i kada ih pogodi prilagođeno pravilo.
-- EN: The consent runtime and its inline configuration are exempt from MBCC blocking, including accidental matches from custom rules.
-- SR/EN: Postojeća podešavanja i saglasnosti se čuvaju / Existing settings and consent records are preserved. Includes all 1.0.3 fixes.
+### Installation and configuration
 
-### Polylang / Optimizatori / Optimizers
+1. In WordPress Admin, open **Plugins → Add New → Upload Plugin**.
+2. Select the ZIP, install it and activate the plugin.
+3. Open **Settings → MB Cookie Consent**.
+4. Enter the Serbian and English privacy-policy URLs.
+5. Review the script handle, URL, iframe and cookie rules.
+6. Change `Consent version` when a policy update requires renewed consent.
+7. Clear the page/optimization cache, CDN/Cloudflare cache and browser cache, then test in a private window.
 
-- WordPress script handles: `pll_cookie_script|preferences`
-- Cookies to remove after rejection: `pll_language|preferences`
-- SR: Polylang handle ne dodavati u Script URL patterns. URL obrasci pretražuju i sadržaj inline skripti. Testirati najpre bez WP Meteora i drugih optimizatora: oni mogu ponovo aktivirati blokirane skripte. Ovo izdanje ne garantuje kompatibilnost sa njihovim prepisivanjem HTML-a.
-- EN: Do not add the Polylang handle to Script URL patterns. URL patterns also search inline script contents. Test without WP Meteor or other optimizers first: they may reactivate blocked scripts. This release does not guarantee compatibility with their HTML rewriting.
-- SR/EN: Posle ažuriranja očistiti page/CDN/browser keš / Clear page, CDN and browser caches after updating.
+### Manual blocking
 
-### Developer verification
+```html
+<script
+    type="text/plain"
+    data-mbcc-category="analytics"
+    data-mbcc-src="https://example.com/analytics.js"
+></script>
+```
 
-Run `php tests/blocker-regression.php` and `node tests/frontend-regression.cjs` from the repository root. These are standalone behavioral tests with WordPress/DOM doubles, not WordPress runtime or production certification. Tests are excluded from the installation ZIP.
+Allowed categories are `preferences`, `analytics` and `marketing`.
 
-## 1.0.3 — Ispravke / Fixes
+### Important limitations
 
-- SR: Brisanje kolačića sada pokušava sve roditeljske domene, uključujući `.primer.co.rs`, `.primer.com.rs` i dublje poddomene. Browser odbija pokušaje na public suffix domenima; nije ugrađena niti potrebna ručno održavana lista TLD-ova.
-- SR: `mbcc_settings` koristi autoload. Za postojeće instalacije promena se primenjuje pri sledećem otvaranju Admina korisnikom sa `manage_options`, bez menjanja sadržaja podešavanja. Postojeće saglasnosti ostaju važeće.
-- EN: Cookie removal now tries all parent domains, including multipart suffixes and nested subdomains. The browser rejects public-suffix attempts; no manually maintained TLD list is used.
-- EN: Settings are autoloaded on new installs. Existing installs are migrated on the next administrator dashboard request without altering saved settings or invalidating consent.
-- Scope: removal remains limited to configured, JavaScript-accessible cookies at path `/`. HttpOnly cookies, other paths and cookies on unrelated third-party domains are outside this fix.
+- The plugin does not automatically crawl the whole site.
+- HttpOnly and server-side cookies cannot be removed by JavaScript.
+- The `mbcc_consent` cookie remains technically exempt so the visitor's selection can persist between pages.
+- Disabling genuinely necessary cookies may break login, security, cart or other essential site functions.
+- Dynamically injected scripts and proxied resources require a dedicated rule or integration change.
+- JavaScript minification or delay can change handles and URLs, so rules should be retested after enabling optimization.
+- A technical plugin is not a legal guarantee of compliance.
 
 ## Srpski (latinica)
 
@@ -60,7 +68,7 @@ Samostalan WordPress dodatak za dvojezični baner za kolačiće i blokiranje opc
 - Google Consent Mode v2;
 - izbor izgleda: puna traka, plutajuća kartica levo, desno ili u sredini;
 - povlačenje ili promena saglasnosti;
-- shortcode `[mbcc_cookie_settings]`;
+- shortcode `[mbcc_cookie_settings]`.
 
 ### Instalacija i podešavanje
 
@@ -70,7 +78,7 @@ Samostalan WordPress dodatak za dvojezični baner za kolačiće i blokiranje opc
 4. Unesite srpski i engleski URL politike privatnosti.
 5. Pregledajte script handle, URL, iframe i cookie pravila.
 6. Promenite `Consent version` kada izmena politike zahteva novu saglasnost.
-7. Očistite Autoptimize/page cache, CDN/Cloudflare i browser cache, pa testirajte u privatnom prozoru.
+7. Očistite page/optimization cache, CDN/Cloudflare i browser cache, pa testirajte u privatnom prozoru.
 
 ### Ručno blokiranje
 
@@ -91,29 +99,94 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 - Kolačić `mbcc_consent`, koji pamti izbor posetioca, ostaje tehnički izuzet; bez njega izbor ne može da se sačuva između stranica.
 - Isključivanje stvarno neophodnih kolačića može prekinuti prijavu, bezbednost, korpu ili druge osnovne funkcije.
 - Dinamički ubačene skripte i proxy URL-ovi zahtevaju posebno pravilo ili izmenu integracije.
-- Minifikacija/odlaganje JavaScripta može promeniti handle ili URL, pa pravila treba proveriti nakon uključivanja optimizacije.
+- Minifikacija ili odlaganje JavaScripta može promeniti handle ili URL, pa pravila treba proveriti nakon uključivanja optimizacije.
 - Tehnički dodatak ne predstavlja pravnu garanciju usklađenosti.
 
-## English
+## Screenshots
 
-Standalone WordPress plugin providing a bilingual cookie banner and prior blocking of optional scripts. It is designed for standard and classic WordPress frontends.
+### Consent banner
 
-### Features
+![English consent banner](.wordpress-org/screenshot-1.png)
 
-- Serbian Latin and English;
-- automatic WordPress, Polylang and WPML language detection;
-- necessary, preferences, analytics and marketing categories;
-- necessary is selected by default but can be disabled manually by the visitor;
-- accept all, reject optional and granular choices;
-- blocking by WordPress script handle and URL pattern;
-- placeholders for YouTube, Vimeo and Google Maps;
-- Google Consent Mode v2;
-- four layouts: full-width bar or a floating card aligned left, right or centre;
-- consent withdrawal/change control;
-- `[mbcc_cookie_settings]` shortcode;
+### Granular cookie settings
 
-### Important limitations
+![English granular cookie settings](.wordpress-org/screenshot-2.png)
 
-This release does not crawl the whole site. HttpOnly/server cookies, dynamically injected scripts, proxied resources and optimization-plugin rewrites require a site-specific audit. A technical plugin is not a legal guarantee of compliance.
+### Administration settings in English
 
-The `mbcc_consent` preference cookie remains technically exempt so the visitor's selection can persist. Disabling genuinely necessary cookies may break login, security, cart or other essential site functions.
+![WordPress administration settings in English](.wordpress-org/screenshot-3.png)
+
+### Administratorska podešavanja na srpskom
+
+![WordPress administratorska podešavanja na srpskom](.wordpress-org/screenshot-4.png)
+
+## Changelog
+
+### 1.0.7 — Necessary-cookie description / opis neophodnih kolačića
+
+- EN: Replaces the obsolete “cannot be disabled” wording with an explanation matching the configurable necessary-category switch.
+- SR: Zastareli tekst „Ne mogu se isključiti” zamenjen je jasnim objašnjenjem da su neophodni kolačići podrazumevano uključeni, ali da ih posetilac može isključiti uz moguć gubitak pojedinih funkcija sajta.
+- EN/SR: Existing installations update only the exact legacy stock text; customized content remains untouched. / Na postojećim instalacijama menja se samo identičan stari podrazumevani tekst; prilagođeni sadržaj ostaje netaknut.
+
+### 1.0.6 — WordPress.org preparation / priprema
+
+- EN: WordPress.org metadata, privacy documentation and directory listing assets are prepared.
+- SR: Ažurirani su WordPress.org metapodaci, dokumentacija privatnosti i listing resursi.
+- EN: A POT catalogue and a complete `sr_RS_latin` WordPress Admin translation are included. English remains the source language.
+- SR: Dodat je POT katalog i kompletan prevod WordPress Admin interfejsa za `sr_RS_latin`. Engleski ostaje izvorni jezik.
+
+### 1.0.5 — Google Site Kit defaults / podrazumevana pravila
+
+- Google Tag (`googletagmanager.com/gtag/js`) and the Google Site Kit events provider are blocked as analytics by default until consent.
+- Existing installations receive only missing rules once. Custom rules and categories, other settings and existing consent records remain unchanged.
+- Google Ads `AW-` patterns remain classified as marketing.
+
+### 1.0.4 — Frontend fixes / ispravke
+
+- Initialization waits for DOM readiness so the floating settings control works without a script-delay plugin; scripts loaded after DOM readiness initialize immediately.
+- The consent runtime and its inline configuration (`MBCC_CONFIG`) are exempt from MBCC blocking, including accidental matches from custom rules.
+- Existing settings and consent records remain unchanged. Includes all 1.0.3 fixes.
+
+#### Polylang and optimization plugins
+
+- WordPress script handle: `pll_cookie_script|preferences`
+- Cookie removed after rejection: `pll_language|preferences`
+- Do not add the Polylang handle to Script URL patterns. URL patterns also search inline script contents.
+- Test without WP Meteor or other optimizers first: they may reactivate blocked scripts. This release does not guarantee compatibility with rewritten HTML.
+- Clear page, CDN and browser caches after updating.
+
+### 1.0.3 — Cookie removal and settings autoload
+
+- Cookie removal attempts all parent domains, including multipart suffixes and nested subdomains. The browser rejects public-suffix attempts; no manually maintained TLD list is used.
+- `mbcc_settings` is autoloaded. Existing installations are migrated on the next administrator dashboard request without changing saved settings or consent records.
+- Removal remains limited to configured, JavaScript-accessible cookies at path `/`. HttpOnly cookies, other paths and unrelated third-party domains are outside this fix.
+
+## Verification
+
+The plugin has been tested in staging and production environments. The following checks were performed:
+
+### Staging and production
+
+- first visit in a private browser window, including opening the initial banner and granular cookie-settings dialog;
+- accepting all, rejecting optional cookies and saving individual category choices;
+- persistence of consent after page reload and reopening the dialog from the floating settings button;
+- Serbian Latin and English frontend presentation, plus the Serbian Latin WordPress Admin translation;
+- rejection and removal of the Polylang `pll_language` preference cookie while retaining only the technically required `mbcc_consent` cookie;
+- blocking Google Tag and Google Site Kit analytics scripts before analytics consent, then releasing them after analytics is allowed;
+- operation with Cloudflare and Super Page Cache after clearing page, CDN and browser caches;
+- the banner, granular dialog and floating settings control on the production Blogsy frontend.
+
+Browser tracking protection may independently block analytics requests even after consent; that browser behavior is separate from the plugin's consent decision.
+
+### Automated developer checks
+
+- PHP syntax validation for every shipped PHP file;
+- `php tests/blocker-regression.php` for protection of the plugin runtime/configuration and Polylang inline-script blocking;
+- `php tests/settings-rules-regression.php` for default-rule precedence, preservation of custom settings, the 1.0.7 text migration, administrator authorization and migration idempotency;
+- `node tests/frontend-regression.cjs` for loading, interactive and complete document states, with preferences allowed and denied, including open, close, reopen and save flows;
+- JavaScript syntax validation for `assets/js/frontend.js`;
+- activation and settings-page runtime checks on WordPress 6.4 with PHP 7.4 and WordPress 7.1 with PHP 8.1;
+- WordPress Plugin Check with all error and warning categories enabled;
+- release ZIP inspection for version metadata, expected root directory and exclusion of repository/development-only files.
+
+The tests under `tests/` use standalone WordPress/DOM doubles and are excluded from the installation ZIP. Version 1.0.7 changes only the necessary-cookie description and its exact-match migration; confirm that migrated wording after installing 1.0.7 in staging and production.

@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class MBCC_Plugin {
 	const RULES_VERSION_OPTION = 'mbcc_rules_version';
-	const RULES_VERSION        = '1.0.5';
+	const RULES_VERSION        = '1.0.7';
 
 	/** @var MBCC_Plugin|null */
 	private static $instance = null;
@@ -45,7 +45,7 @@ final class MBCC_Plugin {
 	}
 
 	/**
-	 * Add new stock blocking rules once without replacing site-specific rules.
+	 * Add new stock defaults once without replacing site-specific settings.
 	 * Existing rules win even when their category differs from the new default.
 	 *
 	 * @return void
@@ -82,6 +82,10 @@ final class MBCC_Plugin {
 			$settings[ $key ] = self::append_missing_rules( $original, $rules );
 			$changed          = $changed || $settings[ $key ] !== $original;
 		}
+
+		$upgraded_settings = MBCC_Settings::replace_legacy_default_texts( $settings );
+		$changed           = $changed || $upgraded_settings !== $settings;
+		$settings          = $upgraded_settings;
 
 		if ( $changed && ! update_option( MBCC_Settings::OPTION_NAME, $settings, true ) ) {
 			return;
