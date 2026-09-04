@@ -34,7 +34,28 @@ final class MBCC_Plugin {
 	 */
 	public static function activate() {
 		if ( false === get_option( MBCC_Settings::OPTION_NAME, false ) ) {
-			add_option( MBCC_Settings::OPTION_NAME, MBCC_Settings::defaults(), '', false );
+			add_option( MBCC_Settings::OPTION_NAME, MBCC_Settings::defaults(), '', true );
+		} else {
+			wp_set_option_autoload_values( array( MBCC_Settings::OPTION_NAME => true ) );
+		}
+	}
+
+	/**
+	 * Upgrade existing installations without replacing their settings.
+	 * Uses the cached alloptions list, so no repeated writes are required.
+	 *
+	 * @return void
+	 */
+	public static function ensure_settings_autoload() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$autoloaded = wp_load_alloptions();
+		if ( isset( $autoloaded[ MBCC_Settings::OPTION_NAME ] ) ) {
+			return;
+		}
+		if ( false !== get_option( MBCC_Settings::OPTION_NAME, false ) ) {
+			wp_set_option_autoload_values( array( MBCC_Settings::OPTION_NAME => true ) );
 		}
 	}
 
@@ -51,6 +72,7 @@ final class MBCC_Plugin {
 		$this->booted = true;
 
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
+		add_action( 'admin_init', array( __CLASS__, 'ensure_settings_autoload' ) );
 
 		$settings = new MBCC_Settings();
 		$settings->register_hooks();

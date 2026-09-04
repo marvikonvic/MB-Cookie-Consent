@@ -1,5 +1,12 @@
-(function () {
+(function initializeMBCC() {
     'use strict';
+
+    // Footer scripts can run before the priority-99 banner markup is parsed.
+    // Also support deferred/delayed execution after DOMContentLoaded has fired.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeMBCC, { once: true });
+        return;
+    }
 
     var config = window.MBCC_CONFIG;
     if (!config) {
@@ -79,8 +86,14 @@
         var hostname = window.location.hostname;
         var domains = ['', hostname, '.' + hostname];
         var parts = hostname.split('.');
-        if (parts.length > 2) {
-            domains.push('.' + parts.slice(-2).join('.'));
+        // Try every parent, not a guessed registrable domain. This includes
+        // primer.co.rs as well as nested subdomains. The browser rejects
+        // public suffixes; these writes only expire cookies, never create them.
+        // IP addresses and single-label hosts have no parent cookie domain.
+        if (hostname.indexOf(':') === -1 && !/^\d+(?:\.\d+){3}$/.test(hostname)) {
+            for (var index = 1; index < parts.length - 1; index += 1) {
+                domains.push('.' + parts.slice(index).join('.'));
+            }
         }
         domains.forEach(function (domain) {
             var value = name + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax';

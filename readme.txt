@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, script blocker, bilingual, google consent mode
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,17 @@ Allowed category values are preferences, analytics and marketing.
 Use shortcode `[mbcc_cookie_settings]`.
 
 == Changelog ==
+
+= 1.0.4 =
+
+* Initialize the frontend after DOM parsing, fixing the floating settings control without script-delay plugins.
+* Keep the plugin's own runtime and inline configuration executable even when custom blocking rules match them.
+* Preserve existing settings and consent records; includes the 1.0.3 cookie-domain and autoload fixes.
+
+= 1.0.3 =
+
+* Fixed cookie removal on parent domains such as primer.co.rs, primer.com.rs and example.co.uk, including nested subdomains.
+* Enabled settings autoload for new installations; existing installations are updated on the next administrator dashboard request without changing saved settings.
 
 = 1.0.2 =
 

@@ -6,3 +6,6 @@
 *.gif binary
 *.webp binary
 *.zip binary
+
+/.gitattributes export-ignore
+/tests export-ignore

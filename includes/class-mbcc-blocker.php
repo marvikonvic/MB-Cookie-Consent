@@ -43,7 +43,7 @@ class MBCC_Blocker {
 	 */
 	public function filter_script_loader_tag( $tag, $handle ) {
 		$key = strtolower( (string) $handle );
-		if ( ! isset( $this->handle_rules[ $key ] ) ) {
+		if ( 'mbcc-frontend' === $key || ! isset( $this->handle_rules[ $key ] ) ) {
 			return $tag;
 		}
 
@@ -74,6 +74,9 @@ class MBCC_Blocker {
 			'~<script\b[^>]*>.*?</script\s*>~is',
 			function ( $matches ) {
 				$tag = $matches[0];
+				if ( $this->is_own_script( $tag ) ) {
+					return $tag;
+				}
 				if ( false !== stripos( $tag, 'data-mbcc-essential' ) || false !== stripos( $tag, 'data-mbcc-blocked' ) ) {
 					return $tag;
 				}
@@ -128,9 +131,25 @@ class MBCC_Blocker {
 		);
 	}
 
+	/** Never gate the consent runtime or its WordPress-generated configuration. */
+	private function is_own_script( $tag ) {
+		$end = strpos( $tag, '>' );
+		if ( false === $end ) {
+			return false;
+		}
+
+		// Inspect the opening tag only; an ID inside JS text is not an exemption.
+		$id = strtolower( $this->attribute( substr( $tag, 0, $end + 1 ), 'id' ) );
+		return in_array(
+			$id,
+			array( 'mbcc-frontend-js', 'mbcc-frontend-js-extra', 'mbcc-frontend-js-before', 'mbcc-frontend-js-after' ),
+			true
+		);
+	}
+
 	/** Convert an executable script into inert markup. */
 	private function block_script_tag( $tag, $category ) {
-		if ( false !== stripos( $tag, 'data-mbcc-blocked' ) ) {
+		if ( $this->is_own_script( $tag ) || false !== stripos( $tag, 'data-mbcc-blocked' ) ) {
 			return $tag;
 		}
 
