@@ -1,0 +1,189 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MB Cookie Consent 1.0.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/mb-cookie-consent/\n"
+"Last-Translator: marvikonvic\n"
+"Language-Team: Serbian (Latin) <https://translate.wordpress.org/locale/sr/latin/>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-04T18:37:15+00:00\n"
+"PO-Revision-Date: 2026-09-04 20:40+0200\n"
+"Language: sr_RS_latin\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Codex\n"
+"X-Domain: mb-cookie-consent\n"
+
+#. Plugin Name of the plugin
+#: mb-cookie-consent.php
+#: includes/class-mbcc-settings.php:145
+#: includes/class-mbcc-settings.php:146
+#: includes/class-mbcc-settings.php:219
+msgid "MB Cookie Consent"
+msgstr "MB saglasnost za kolačiće"
+
+#. Description of the plugin
+#: mb-cookie-consent.php
+msgid "Bilingual, privacy-first cookie consent and script blocking for WordPress."
+msgstr "Dvojezična saglasnost za kolačiće i blokiranje skripti sa privatnošću na prvom mestu za WordPress."
+
+#. Author of the plugin
+#: mb-cookie-consent.php
+msgid "MB"
+msgstr "MB"
+
+#: includes/class-mbcc-settings.php:160
+msgid "Settings"
+msgstr "Podešavanja"
+
+#: includes/class-mbcc-settings.php:220
+msgid "Bilingual consent banner and cache-safe blocking for standard WordPress frontends, classic themes and Blogsy."
+msgstr "Dvojezični baner za saglasnost i blokiranje bezbedno za keširanje za standardni WordPress frontend, klasične teme i Blogsy."
+
+#: includes/class-mbcc-settings.php:224
+msgid "General"
+msgstr "Opšte"
+
+#: includes/class-mbcc-settings.php:226
+msgid "Enable consent banner"
+msgstr "Omogući baner za saglasnost"
+
+#: includes/class-mbcc-settings.php:227
+msgid "Frontend language"
+msgstr "Jezik frontenda"
+
+#: includes/class-mbcc-settings.php:229
+msgid "Automatic (WordPress, Polylang or WPML)"
+msgstr "Automatski (WordPress, Polylang ili WPML)"
+
+#: includes/class-mbcc-settings.php:230
+msgid "Serbian Latin"
+msgstr "Srpski latinica"
+
+#: includes/class-mbcc-settings.php:231
+msgid "English"
+msgstr "Engleski"
+
+#: includes/class-mbcc-settings.php:234
+msgid "Banner layout"
+msgstr "Izgled banera"
+
+#: includes/class-mbcc-settings.php:234
+msgid "Full-width bar"
+msgstr "Traka pune širine"
+
+#: includes/class-mbcc-settings.php:234
+msgid "Floating card — left"
+msgstr "Plutajuća kartica — levo"
+
+#: includes/class-mbcc-settings.php:234
+msgid "Floating card — right"
+msgstr "Plutajuća kartica — desno"
+
+#: includes/class-mbcc-settings.php:234
+msgid "Floating card — centre"
+msgstr "Plutajuća kartica — sredina"
+
+#: includes/class-mbcc-settings.php:235
+msgid "Banner position"
+msgstr "Položaj banera"
+
+#: includes/class-mbcc-settings.php:235
+msgid "Bottom"
+msgstr "Dole"
+
+#: includes/class-mbcc-settings.php:235
+msgid "Top"
+msgstr "Gore"
+
+#: includes/class-mbcc-settings.php:236
+msgid "Settings button side"
+msgstr "Strana dugmeta za podešavanja"
+
+#: includes/class-mbcc-settings.php:236
+msgid "Left"
+msgstr "Levo"
+
+#: includes/class-mbcc-settings.php:236
+msgid "Right"
+msgstr "Desno"
+
+#: includes/class-mbcc-settings.php:237
+msgid "Accent colour"
+msgstr "Istaknuta boja"
+
+#: includes/class-mbcc-settings.php:238
+msgid "Consent version"
+msgstr "Verzija saglasnosti"
+
+#: includes/class-mbcc-settings.php:238
+msgid "Change this value to ask every visitor for consent again."
+msgstr "Promenite ovu vrednost da biste od svakog posetioca ponovo zatražili saglasnost."
+
+#: includes/class-mbcc-settings.php:239
+msgid "Consent lifetime (days)"
+msgstr "Trajanje saglasnosti (dani)"
+
+#: includes/class-mbcc-settings.php:240
+msgid "Google Consent Mode v2"
+msgstr "Google Consent Mode v2"
+
+#: includes/class-mbcc-settings.php:241
+msgid "Allow visitors to disable the necessary category"
+msgstr "Dozvoli posetiocima da isključe neophodnu kategoriju"
+
+#: includes/class-mbcc-settings.php:242
+msgid "Delete settings when the plugin is uninstalled"
+msgstr "Obriši podešavanja kada se dodatak deinstalira"
+
+#: includes/class-mbcc-settings.php:245
+msgid "Privacy policy"
+msgstr "Politika privatnosti"
+
+#: includes/class-mbcc-settings.php:247
+msgid "Serbian URL"
+msgstr "URL na srpskom"
+
+#: includes/class-mbcc-settings.php:248
+msgid "English URL"
+msgstr "URL na engleskom"
+
+#: includes/class-mbcc-settings.php:251
+msgid "Blocking rules"
+msgstr "Pravila blokiranja"
+
+#: includes/class-mbcc-settings.php:252
+msgid "Use one rule per line in the format value|category. Allowed categories: necessary, preferences, analytics, marketing."
+msgstr "Koristite jedno pravilo po redu u formatu vrednost|kategorija. Dozvoljene kategorije: necessary, preferences, analytics, marketing."
+
+#: includes/class-mbcc-settings.php:254
+msgid "Enable URL-based script and iframe blocking"
+msgstr "Omogući blokiranje skripti i iframe elemenata na osnovu URL-a"
+
+#: includes/class-mbcc-settings.php:255
+msgid "WordPress script handles"
+msgstr "WordPress oznake skripti"
+
+#: includes/class-mbcc-settings.php:256
+msgid "Script URL patterns"
+msgstr "URL obrasci skripti"
+
+#: includes/class-mbcc-settings.php:257
+msgid "Iframe URL patterns"
+msgstr "Iframe URL obrasci"
+
+#: includes/class-mbcc-settings.php:258
+msgid "Cookies to remove after rejection"
+msgstr "Kolačići za uklanjanje nakon odbijanja"
+
+#: includes/class-mbcc-settings.php:261
+msgid "Serbian Latin frontend text"
+msgstr "Tekst frontenda na srpskom (latinica)"
+
+#: includes/class-mbcc-settings.php:262
+msgid "English frontend text"
+msgstr "Tekst frontenda na engleskom"
+
+#: includes/class-mbcc-settings.php:272
+msgid "Enabled"
+msgstr "Omogućeno"

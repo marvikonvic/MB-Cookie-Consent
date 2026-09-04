@@ -9,3 +9,4 @@
 
 /.gitattributes export-ignore
 /tests export-ignore
+/.wordpress-org export-ignore

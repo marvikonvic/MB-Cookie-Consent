@@ -1,10 +1,10 @@
 === MB Cookie Consent ===
-Contributors: mb
+Contributors: marvikonvic
 Tags: cookie consent, gdpr, script blocker, bilingual, google consent mode
 Requires at least: 6.4
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,10 @@ MB Cookie Consent provides:
 * Theme-isolated CSS suitable for standard, classic and Blogsy frontends.
 
 This plugin is a technical consent tool. Site owners remain responsible for auditing services, configuring every non-essential script/cookie and obtaining legal advice appropriate to their site and visitors.
+
+== Privacy ==
+
+MB Cookie Consent does not send telemetry, usage data or personal data to the plugin author or any external service. It stores the technically necessary `mbcc_consent` browser cookie to remember the visitor's choices. The plugin only blocks or releases scripts and external content configured by the site owner. Site owners remain responsible for documenting and lawfully configuring any third-party services used on their site.
 
 == Installation ==
 
@@ -58,7 +62,20 @@ Allowed category values are preferences, analytics and marketing.
 
 Use shortcode `[mbcc_cookie_settings]`.
 
+== Screenshots ==
+
+1. Consent banner with accept, reject and cookie-settings controls.
+2. Granular cookie-settings dialog with four consent categories.
+3. WordPress administration settings for language, appearance and consent behavior.
+4. Serbian Latin translation of the WordPress administration settings.
+
 == Changelog ==
+
+= 1.0.6 =
+
+* Prepare WordPress.org metadata and assets.
+* Add Serbian Latin translation files and a translation template.
+* Document plugin privacy behavior.
 
 = 1.0.5 =
 

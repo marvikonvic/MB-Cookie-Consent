@@ -1,0 +1,189 @@
+# Copyright (C) 2026 MB
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: MB Cookie Consent 1.0.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/mb-cookie-consent/\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Serbian (Latin) <https://translate.wordpress.org/locale/sr/latin/>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-09-04T18:36:34+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: mb-cookie-consent\n"
+
+#. Plugin Name of the plugin
+#: mb-cookie-consent.php
+#: includes/class-mbcc-settings.php:145
+#: includes/class-mbcc-settings.php:146
+#: includes/class-mbcc-settings.php:219
+msgid "MB Cookie Consent"
+msgstr ""
+
+#. Description of the plugin
+#: mb-cookie-consent.php
+msgid "Bilingual, privacy-first cookie consent and script blocking for WordPress."
+msgstr ""
+
+#. Author of the plugin
+#: mb-cookie-consent.php
+msgid "MB"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:160
+msgid "Settings"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:220
+msgid "Bilingual consent banner and cache-safe blocking for standard WordPress frontends, classic themes and Blogsy."
+msgstr ""
+
+#: includes/class-mbcc-settings.php:224
+msgid "General"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:226
+msgid "Enable consent banner"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:227
+msgid "Frontend language"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:229
+msgid "Automatic (WordPress, Polylang or WPML)"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:230
+msgid "Serbian Latin"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:231
+msgid "English"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:234
+msgid "Banner layout"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:234
+msgid "Full-width bar"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:234
+msgid "Floating card — left"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:234
+msgid "Floating card — right"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:234
+msgid "Floating card — centre"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:235
+msgid "Banner position"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:235
+msgid "Bottom"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:235
+msgid "Top"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:236
+msgid "Settings button side"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:236
+msgid "Left"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:236
+msgid "Right"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:237
+msgid "Accent colour"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:238
+msgid "Consent version"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:238
+msgid "Change this value to ask every visitor for consent again."
+msgstr ""
+
+#: includes/class-mbcc-settings.php:239
+msgid "Consent lifetime (days)"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:240
+msgid "Google Consent Mode v2"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:241
+msgid "Allow visitors to disable the necessary category"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:242
+msgid "Delete settings when the plugin is uninstalled"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:245
+msgid "Privacy policy"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:247
+msgid "Serbian URL"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:248
+msgid "English URL"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:251
+msgid "Blocking rules"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:252
+msgid "Use one rule per line in the format value|category. Allowed categories: necessary, preferences, analytics, marketing."
+msgstr ""
+
+#: includes/class-mbcc-settings.php:254
+msgid "Enable URL-based script and iframe blocking"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:255
+msgid "WordPress script handles"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:256
+msgid "Script URL patterns"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:257
+msgid "Iframe URL patterns"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:258
+msgid "Cookies to remove after rejection"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:261
+msgid "Serbian Latin frontend text"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:262
+msgid "English frontend text"
+msgstr ""
+
+#: includes/class-mbcc-settings.php:272
+msgid "Enabled"
+msgstr ""

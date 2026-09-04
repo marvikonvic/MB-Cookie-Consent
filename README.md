@@ -1,4 +1,11 @@
-# MB Cookie Consent 1.0.5
+# MB Cookie Consent 1.0.6
+
+## 1.0.6 — WordPress.org priprema / WordPress.org preparation
+
+- SR: Ažurirani su WordPress.org metapodaci, dokumentacija privatnosti i listing resursi.
+- EN: WordPress.org metadata, privacy documentation and directory listing assets are prepared.
+- SR: Dodat je POT katalog i kompletan prevod WordPress Admin interfejsa za `sr_RS_latin`. Engleski ostaje izvorni jezik.
+- EN: A POT catalogue and a complete `sr_RS_latin` WordPress Admin translation are included. English remains the source language.
 
 ## 1.0.5 — Google Site Kit podrazumevana pravila / Google Site Kit defaults
 
