@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, script blocker, bilingual, google consent mode
 Requires at least: 6.4
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,12 @@ Allowed category values are preferences, analytics and marketing.
 Use shortcode `[mbcc_cookie_settings]`.
 
 == Changelog ==
+
+= 1.0.5 =
+
+* Block Google Tag and Google Site Kit event scripts as analytics by default until consent.
+* Add only missing stock rules once on existing installations, preserving custom categories, settings and consent records.
+* Keep the Google Ads AW pattern classified as marketing.
 
 = 1.0.4 =
 

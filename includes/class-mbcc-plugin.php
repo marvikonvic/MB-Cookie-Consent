@@ -8,6 +8,9 @@
 defined( 'ABSPATH' ) || exit;
 
 final class MBCC_Plugin {
+	const RULES_VERSION_OPTION = 'mbcc_rules_version';
+	const RULES_VERSION        = '1.0.5';
+
 	/** @var MBCC_Plugin|null */
 	private static $instance = null;
 
@@ -35,9 +38,96 @@ final class MBCC_Plugin {
 	public static function activate() {
 		if ( false === get_option( MBCC_Settings::OPTION_NAME, false ) ) {
 			add_option( MBCC_Settings::OPTION_NAME, MBCC_Settings::defaults(), '', true );
+			update_option( self::RULES_VERSION_OPTION, self::RULES_VERSION, false );
 		} else {
 			wp_set_option_autoload_values( array( MBCC_Settings::OPTION_NAME => true ) );
 		}
+	}
+
+	/**
+	 * Add new stock blocking rules once without replacing site-specific rules.
+	 * Existing rules win even when their category differs from the new default.
+	 *
+	 * @return void
+	 */
+	public static function migrate_default_rules() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$current_version = (string) get_option( self::RULES_VERSION_OPTION, '0' );
+		if ( version_compare( $current_version, self::RULES_VERSION, '>=' ) ) {
+			return;
+		}
+
+		$settings = get_option( MBCC_Settings::OPTION_NAME, false );
+		if ( ! is_array( $settings ) ) {
+			return;
+		}
+
+		$required_rules = array(
+			'script_handles'  => array(
+				'google_gtagjs|analytics',
+				'googlesitekit-events-provider-content-events|analytics',
+			),
+			'script_patterns' => array(
+				'googletagmanager.com/gtag/js|analytics',
+				'google-site-kit/dist/assets/js/googlesitekit-events-provider-content-events-|analytics',
+			),
+		);
+
+		$changed = false;
+		foreach ( $required_rules as $key => $rules ) {
+			$original         = isset( $settings[ $key ] ) ? (string) $settings[ $key ] : '';
+			$settings[ $key ] = self::append_missing_rules( $original, $rules );
+			$changed          = $changed || $settings[ $key ] !== $original;
+		}
+
+		if ( $changed && ! update_option( MBCC_Settings::OPTION_NAME, $settings, true ) ) {
+			return;
+		}
+
+		update_option( self::RULES_VERSION_OPTION, self::RULES_VERSION, false );
+	}
+
+	/**
+	 * Append rules whose value is not already present in any category.
+	 *
+	 * @param string            $stored Existing newline-delimited rules.
+	 * @param array<int,string> $required Rules to add.
+	 * @return string
+	 */
+	private static function append_missing_rules( $stored, $required ) {
+		$lines  = preg_split( '/\r\n|\r|\n/', $stored );
+		$lines  = is_array( $lines ) ? $lines : array();
+		$values = array();
+		$missing = array();
+
+		foreach ( $lines as $line ) {
+			$parts = explode( '|', trim( $line ), 2 );
+			$value = strtolower( trim( $parts[0] ) );
+			if ( '' !== $value ) {
+				$values[ $value ] = true;
+			}
+		}
+
+		foreach ( $required as $rule ) {
+			$parts = explode( '|', $rule, 2 );
+			$value = strtolower( trim( $parts[0] ) );
+			if ( isset( $values[ $value ] ) ) {
+				continue;
+			}
+
+			$missing[]        = $rule;
+			$values[ $value ] = true;
+		}
+
+		if ( empty( $missing ) ) {
+			return $stored;
+		}
+
+		$separator = '' === $stored || preg_match( '/(?:\r\n|\r|\n)$/', $stored ) ? '' : "\n";
+		return $stored . $separator . implode( "\n", $missing );
 	}
 
 	/**
@@ -73,6 +163,7 @@ final class MBCC_Plugin {
 
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 		add_action( 'admin_init', array( __CLASS__, 'ensure_settings_autoload' ) );
+		add_action( 'admin_init', array( __CLASS__, 'migrate_default_rules' ) );
 
 		$settings = new MBCC_Settings();
 		$settings->register_hooks();

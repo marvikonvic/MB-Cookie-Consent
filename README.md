@@ -1,4 +1,13 @@
-# MB Cookie Consent 1.0.4
+# MB Cookie Consent 1.0.5
+
+## 1.0.5 — Google Site Kit podrazumevana pravila / Google Site Kit defaults
+
+- SR: Google Tag (`googletagmanager.com/gtag/js`) i Google Site Kit events provider sada su podrazumevano blokirani kao analitika do pristanka.
+- EN: Google Tag (`googletagmanager.com/gtag/js`) and the Google Site Kit events provider are now blocked as analytics by default until consent.
+- SR: Postojeće instalacije jednokratno dobijaju samo nedostajuća pravila. Ručna pravila, njihove kategorije, druga podešavanja i postojeće saglasnosti se ne menjaju.
+- EN: Existing installations receive only missing rules once. Custom rules and categories, other settings, and existing consent records remain unchanged.
+- SR/EN: Google Ads `AW-` obrazac ostaje marketing / The Google Ads `AW-` pattern remains marketing.
+- SR/EN: Posle ažuriranja očistiti page/CDN/browser keš / Clear page, CDN and browser caches after updating.
 
 ## 1.0.4 — Ispravke / Fixes
 
