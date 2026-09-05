@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const path = require('node:path');
 const source = fs.readFileSync(path.join(__dirname, '../assets/js/frontend.js'), 'utf8');
 
-async function run(readyState, allowed, missingConfig = false, externalModule = false) {
+async function run(readyState, allowed, missingConfig = false, externalModule = false, initialConsent) {
     let markupReady = readyState !== 'loading';
     let activated = 0;
     let reloads = 0;
@@ -29,7 +29,7 @@ async function run(readyState, allowed, missingConfig = false, externalModule = 
             assert.equal(script['data-mbcc-blocked'], undefined);
             if (externalModule) {
                 assert.equal(script.type, 'module', 'Restore the original module type');
-                assert.equal(script.src, 'https://example.com/module.js?v=1>2', 'Restore the external URL');
+                assert.equal(script.src, 'https://example.com/module.js?v=1%3E2', 'Restore the normalized external URL');
                 assert.equal(script.text, undefined, 'External module must not use inline content');
                 assert.equal(script['data-mbcc-type'], undefined);
                 assert.equal(script['data-mbcc-src'], undefined);
@@ -42,9 +42,10 @@ async function run(readyState, allowed, missingConfig = false, externalModule = 
             {name: 'data-mbcc-src', value: 'https://example.com/module.js?v=1>2'});
         oldScript.textContent = 'throw new Error("must not execute as inline content")';
     }
-    let cookie = 'mbcc_consent=' + Buffer.from(JSON.stringify({version: '1.0', necessary: allowed,
-        preferences: allowed, analytics: allowed, marketing: allowed})).toString('base64url');
+    let cookie = 'mbcc_consent=' + Buffer.from(JSON.stringify(initialConsent === undefined ? {version: '1.0', necessary: allowed,
+        preferences: allowed, analytics: allowed, marketing: allowed} : initialConsent)).toString('base64url');
     const document = {
+        baseURI: 'https://example.com/',
         readyState,
         get cookie() { return cookie; },
         set cookie(value) { cookie = value.split(';')[0]; },
@@ -65,7 +66,7 @@ async function run(readyState, allowed, missingConfig = false, externalModule = 
         btoa: s => Buffer.from(s, 'binary').toString('base64'),
         location: {protocol: 'https:', reload() { reloads++; }}
     };
-    vm.runInNewContext(source, {window, document, CustomEvent: function () {} });
+    vm.runInNewContext(source, {window, document, URL, CustomEvent: function () {} });
     if (readyState === 'loading') {
         markupReady = true;
         document.readyState = 'interactive';
@@ -86,6 +87,12 @@ async function run(readyState, allowed, missingConfig = false, externalModule = 
     click('[data-mbcc-open]');
     assert.equal(modal.hidden, false, readyState + ': floating control must open modal');
     assert.equal(inputs.preferences.checked, allowed);
+    if (initialConsent !== undefined) {
+        assert.equal(inputs.necessary.checked, true);
+        assert.equal(inputs.analytics.checked, false);
+        assert.equal(inputs.marketing.checked, false);
+        assert.equal(banner.hidden, false);
+    }
     click('[data-mbcc-close]');
     assert.equal(modal.hidden, true);
     click('[data-mbcc-open]');
@@ -108,4 +115,11 @@ async function run(readyState, allowed, missingConfig = false, externalModule = 
     await run('complete', true, false, true);
     console.log('PASS: external module stays blocked without consent and restores type/src with consent');
     console.log('PASS: missing configuration exits safely');
+    for (const malformed of [null, [], 'invalid', 1,
+        {version: 'old', necessary: false, preferences: true, analytics: true, marketing: true},
+        {version: '1.0', necessary: true},
+        ...['false', 1, null, {}, []].map(value => ({version: '1.0', necessary: true, preferences: value, analytics: value, marketing: value}))]) {
+        await run('complete', false, false, false, malformed);
+    }
+    console.log('PASS: stale and malformed consent defaults to necessary only');
 })().catch(error => { console.error(error); process.exitCode = 1; });

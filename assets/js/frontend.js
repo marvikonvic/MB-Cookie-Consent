@@ -26,17 +26,18 @@
         try {
             var encoded = decodeURIComponent(match[1]).replace(/-/g, '+').replace(/_/g, '/');
             var consent = JSON.parse(window.atob(encoded));
-            if (typeof consent.necessary !== 'boolean') {
-                consent.necessary = true;
-            }
-            return consent;
+            return validConsent(consent) ? consent : null;
         } catch (error) {
             return null;
         }
     }
 
     function validConsent(consent) {
-        return consent && consent.version === String(config.version);
+        return consent !== null && typeof consent === 'object' && !Array.isArray(consent) &&
+            consent.version === String(config.version) &&
+            ['necessary', 'preferences', 'analytics', 'marketing'].every(function (category) {
+                return Object.prototype.hasOwnProperty.call(consent, category) && typeof consent[category] === 'boolean';
+            });
     }
 
     function encodeConsent(consent) {
@@ -120,12 +121,29 @@
         });
     }
 
-    function activateIframe(iframe) {
-        var source = iframe.getAttribute('data-mbcc-src');
-        if (source) {
-            iframe.setAttribute('src', source);
-            iframe.removeAttribute('data-mbcc-src');
+    // Consent permits loading a resource, not arbitrary executable URL schemes.
+    function resourceURL(value) {
+        if (typeof value !== 'string' || !value.trim()) {
+            return null;
         }
+        try {
+            var url = new URL(value, document.baseURI);
+            if (url.protocol === 'https:' || url.protocol === 'http:') {
+                return url.href;
+            }
+        } catch (error) {
+            // Malformed URLs remain blocked.
+        }
+        return null;
+    }
+
+    function activateIframe(iframe) {
+        var source = resourceURL(iframe.getAttribute('data-mbcc-src'));
+        if (source === null) {
+            return;
+        }
+        iframe.setAttribute('src', source);
+        iframe.removeAttribute('data-mbcc-src');
         iframe.removeAttribute('data-mbcc-blocked');
         var placeholder = iframe.previousElementSibling;
         if (placeholder && placeholder.classList.contains('mbcc-placeholder')) {
@@ -135,9 +153,15 @@
 
     function activateScript(oldScript) {
         return new Promise(function (resolve) {
+            var storedSource = oldScript.getAttribute('data-mbcc-src');
+            var source = storedSource === null ? null : resourceURL(storedSource);
+            if (storedSource !== null && source === null) {
+                resolve();
+                return;
+            }
             var script = document.createElement('script');
             Array.prototype.slice.call(oldScript.attributes).forEach(function (attribute) {
-                if (['type', 'data-mbcc-src', 'data-mbcc-type', 'data-mbcc-blocked', 'data-mbcc-category'].indexOf(attribute.name) === -1 && attribute.name !== 'async' && attribute.name !== 'defer') {
+                if (['src', 'type', 'data-mbcc-src', 'data-mbcc-type', 'data-mbcc-blocked', 'data-mbcc-category'].indexOf(attribute.name) === -1 && attribute.name !== 'async' && attribute.name !== 'defer') {
                     script.setAttribute(attribute.name, attribute.value);
                 }
             });
@@ -145,17 +169,19 @@
             if (originalType) {
                 script.setAttribute('type', originalType);
             }
-            var source = oldScript.getAttribute('data-mbcc-src');
+            var waitsForLoad = Boolean(source) || originalType === 'module';
+            if (waitsForLoad) {
+                script.onload = resolve;
+                script.onerror = resolve;
+            }
             if (source) {
                 script.src = source;
                 script.async = false;
-                script.onload = resolve;
-                script.onerror = resolve;
             } else {
                 script.text = oldScript.textContent;
             }
             oldScript.parentNode.replaceChild(script, oldScript);
-            if (!source) {
+            if (!waitsForLoad) {
                 resolve();
             }
         });
@@ -197,7 +223,7 @@
 		['necessary', 'preferences', 'analytics', 'marketing'].forEach(function (category) {
             var input = document.querySelector('[data-mbcc-category-input="' + category + '"]');
             if (input) {
-                input.checked = category === 'necessary' && !validConsent(consent) ? true : Boolean(consent && consent[category]);
+                input.checked = validConsent(consent) ? consent[category] : category === 'necessary';
             }
         });
     }

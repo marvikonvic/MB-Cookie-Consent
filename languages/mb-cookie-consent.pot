@@ -437,3 +437,12 @@ msgstr ""
 
 msgid "The record could not be saved. Please try again."
 msgstr ""
+
+msgid "The cookie inventory is full. Some cookies could not be recorded; scanning continued. Review the scan findings."
+msgstr ""
+
+msgid "Some cookie inventory records could not be saved. Scanning continued; review the findings and retry."
+msgstr ""
+
+msgid "A rule value cannot contain a pipe (|) or a line break. The finding was retained."
+msgstr ""

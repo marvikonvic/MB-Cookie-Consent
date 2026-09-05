@@ -9,6 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 class MBCC_Scanner {
 	private $page_hook = '';
+	private $scan_warnings = array();
 	const RESULTS_OPTION = 'mbcc_scan_results';
 	const SUMMARY_OPTION = 'mbcc_scan_summary';
 	const JOB_PREFIX     = 'mbcc_scan_job_';
@@ -98,6 +99,12 @@ class MBCC_Scanner {
 			<p><?php echo esc_html__( 'Suggestions are informational. Nothing is blocked and no setting is changed until you confirm a category.', 'mb-cookie-consent' ); ?></p>
 			<p><button type="button" class="button button-primary" id="mbcc-start-scan"><?php echo esc_html__( 'Start manual scan', 'mb-cookie-consent' ); ?></button></p>
 			<div id="mbcc-scan-progress" role="status" aria-live="polite"></div>
+			<?php if ( ! empty( $summary['warnings']['inventory_full'] ) ) : ?>
+				<div class="notice notice-warning"><p><?php echo esc_html__( 'The cookie inventory is full. Some cookies could not be recorded; scanning continued. Review the scan findings.', 'mb-cookie-consent' ); ?></p></div>
+			<?php endif; ?>
+			<?php if ( ! empty( $summary['warnings']['inventory_write_failed'] ) ) : ?>
+				<div class="notice notice-warning"><p><?php echo esc_html__( 'Some cookie inventory records could not be saved. Scanning continued; review the findings and retry.', 'mb-cookie-consent' ); ?></p></div>
+			<?php endif; ?>
 			<?php if ( is_array( $summary ) && isset( $summary['total'], $summary['errors'] ) ) : ?>
 				<p role="status"><?php
 					/* translators: 1: successful URLs, 2: failed URLs, 3: total URLs. */
@@ -179,6 +186,7 @@ class MBCC_Scanner {
 		}
 
 		$batch = array_slice( $job['urls'], (int) $job['offset'], self::BATCH_SIZE );
+		$this->scan_warnings = isset( $job['warnings'] ) ? $job['warnings'] : array();
 		foreach ( $batch as $url ) {
 			if ( ! $this->scan_url( $url ) ) {
 				++$job['errors'];
@@ -186,10 +194,11 @@ class MBCC_Scanner {
 			}
 		}
 		$job['offset'] += count( $batch );
+		$job['warnings'] = $this->scan_warnings;
 		$remaining      = max( 0, count( $job['urls'] ) - $job['offset'] );
 
 		if ( 0 === $remaining ) {
-			update_option( self::SUMMARY_OPTION, array( 'total' => count( $job['urls'] ), 'errors' => $job['errors'], 'failed_urls' => isset( $job['failed_urls'] ) ? $job['failed_urls'] : array() ), false );
+			update_option( self::SUMMARY_OPTION, array( 'total' => count( $job['urls'] ), 'errors' => $job['errors'], 'failed_urls' => isset( $job['failed_urls'] ) ? $job['failed_urls'] : array(), 'warnings' => $job['warnings'] ), false );
 			delete_transient( $key );
 		} else {
 			set_transient( $key, $job, HOUR_IN_SECONDS );
@@ -230,6 +239,9 @@ class MBCC_Scanner {
 		}
 
 		$settings = get_option( MBCC_Settings::OPTION_NAME, array() );
+		if ( false !== strpos( $item['value'], '|' ) || preg_match( '/[\r\n]/', $item['value'] ) ) {
+			wp_die( esc_html__( 'A rule value cannot contain a pipe (|) or a line break. The finding was retained.', 'mb-cookie-consent' ) );
+		}
 		$settings = is_array( $settings ) ? $settings : array();
 		$key      = $map[ $item['type'] ];
 		$stored   = isset( $settings[ $key ] ) ? (string) $settings[ $key ] : '';
@@ -317,7 +329,10 @@ class MBCC_Scanner {
 		foreach ( $items as $item ) {
 			$item['source_url'] = $url;
 			if ( 'cookie' === $item['type'] && class_exists( 'MBCC_Cookies' ) ) {
-				if ( ! MBCC_Cookies::record( $item ) ) { return false; }
+				$failure = null;
+				if ( ! MBCC_Cookies::record( $item, null, $failure ) ) {
+					$this->scan_warnings[ $failure ? $failure : 'inventory_write_failed' ] = true;
+				}
 			}
 			$id = sha1( $item['type'] . '|' . strtolower( $item['value'] ) );
 			if ( self::configured( $item, $settings ) ) {

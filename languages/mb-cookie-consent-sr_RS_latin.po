@@ -466,3 +466,12 @@ msgstr "Sačuvaj zapis"
 
 msgid "The record could not be saved. Please try again."
 msgstr "Zapis nije sačuvan. Pokušajte ponovo."
+
+msgid "The cookie inventory is full. Some cookies could not be recorded; scanning continued. Review the scan findings."
+msgstr "Evidencija kolačića je popunjena. Neki kolačići nisu evidentirani; skeniranje je nastavljeno. Pregledajte rezultate skeniranja."
+
+msgid "Some cookie inventory records could not be saved. Scanning continued; review the findings and retry."
+msgstr "Neki zapisi kolačića nisu sačuvani. Skeniranje je nastavljeno; pregledajte rezultate i pokušajte ponovo."
+
+msgid "A rule value cannot contain a pipe (|) or a line break. The finding was retained."
+msgstr "Vrednost pravila ne može sadržati znak | ili novi red. Nalaz je zadržan."

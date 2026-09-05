@@ -32,13 +32,14 @@ class MBCC_Cookies {
 	}
 
 	/** Keep confirmed metadata when a manual scan observes an existing cookie again. */
-	public static function record( $item, $category = null ) {
+	public static function record( $item, $category = null, &$failure = null ) {
+		$failure = null;
 		$records = get_option( self::OPTION_NAME, array() );
 		$records = is_array( $records ) ? $records : array();
 		$name = sanitize_text_field( $item['value'] );
 		$id = sha1( strtolower( $name ) );
 		$old = isset( $records[ $id ] ) ? $records[ $id ] : array();
-		if ( empty( $old ) && count( $records ) >= self::MAX_RECORDS ) { return false; }
+		if ( empty( $old ) && count( $records ) >= self::MAX_RECORDS ) { $failure = 'inventory_full'; return false; }
 		$row = array_merge( array( 'value' => $name, 'category' => '', 'domain' => '', 'service' => '', 'source_url' => '', 'server' => false, 'httponly' => false, 'linked_rule' => '' ), $old );
 		foreach ( array( 'source_url', 'domain' ) as $key ) {
 			if ( empty( $row[ $key ] ) && ! empty( $item[ $key ] ) ) {
@@ -49,7 +50,9 @@ class MBCC_Cookies {
 		$row['httponly'] = ! empty( $row['httponly'] ) || ! empty( $item['httponly'] );
 		if ( null !== $category ) { $row['category'] = $category; }
 		$records[ $id ] = $row;
-		return $old === $row || update_option( self::OPTION_NAME, $records, false );
+		$saved = $old === $row || update_option( self::OPTION_NAME, $records, false );
+		if ( ! $saved ) { $failure = 'inventory_write_failed'; }
+		return $saved;
 	}
 
 	/** Return distinct rules in configuration order. */

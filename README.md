@@ -168,6 +168,16 @@ Captured from MB Cookie Consent 1.2.0 in a local WordPress demo. Scanner finding
 
 ## Changelog
 
+### Unreleased — consent validation and scanner resilience
+
+- EN: Script and iframe reactivation accepts only valid HTTP(S) URLs, including relative URLs. Rejected sources remain blocked and never fall back to inline execution.
+- SR: Reaktivacija skripti i iframe elemenata prihvata samo ispravne HTTP(S) adrese, uključujući relativne. Odbijeni izvori ostaju blokirani bez izvršavanja inline sadržaja.
+- EN: Keep scan findings when cookie inventory is full or cannot be saved; report inventory warnings separately from failed URLs. Reject unrepresentable rule delimiters without discarding findings.
+- SR: Sačuvani nalazi kada je evidencija puna ili upis ne uspe, uz odvojena upozorenja. Neispravni razdvajači pravila odbijaju se bez gubitka nalaza.
+- EN: Strict boolean consent validation in both readers; stale or malformed consent starts with optional categories off. Inline module activation waits for load/error before continuing.
+- SR: Stroga validacija saglasnosti u oba čitača; stara ili neispravna saglasnost ne uključuje opcione kategorije. Aktivacija inline modula čeka završetak učitavanja ili grešku.
+- Verification: isolated regressions, including `node tests/consent-readers-regression.cjs` (set `PHP_BINARY` if PHP is not on PATH). These checks do not replace browser/staging verification.
+
 ### 1.2.0 — Unified menu and cookie inventory / objedinjeni meni i pregled kolačića
 
 - EN: One main menu with Settings, Scanner, and Cookies and categories; corrected scanner assets and admin links.
