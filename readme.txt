@@ -77,6 +77,8 @@ Use shortcode `[mbcc_cookie_settings]`.
 
 == Screenshots ==
 
+Screenshots show the current 1.2.0 interface, including the unified admin menu, cookie inventory and manual scanner.
+
 1. Consent banner with accept, reject and cookie-settings controls.
 2. Granular cookie-settings dialog with four consent categories.
 3. WordPress administration settings for language, appearance and consent behavior.

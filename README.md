@@ -144,13 +144,17 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 
 ![English granular cookie settings](.wordpress-org/screenshot-2.png)
 
-### Administration settings in English
+### Administration settings and unified menu
 
 ![WordPress administration settings in English](.wordpress-org/screenshot-3.png)
 
-### Administratorska podešavanja na srpskom
+### Cookie inventory and editing
 
 ![WordPress administratorska podešavanja na srpskom](.wordpress-org/screenshot-4.png)
+
+### Manual scanner
+
+![Manual cookie scanner](.wordpress-org/screenshot-5.png)
 
 ## Changelog
 
