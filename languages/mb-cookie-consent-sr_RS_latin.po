@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: MB Cookie Consent 1.0.6\n"
+"Project-Id-Version: MB Cookie Consent 1.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/mb-cookie-consent/\n"
 "Last-Translator: marvikonvic\n"
 "Language-Team: Serbian (Latin) <https://translate.wordpress.org/locale/sr/latin/>\n"
@@ -187,3 +187,131 @@ msgstr "Tekst frontenda na engleskom"
 #: includes/class-mbcc-settings.php:272
 msgid "Enabled"
 msgstr "Omogućeno"
+
+#: includes/class-mbcc-scanner.php
+msgid "MB Cookie Scanner"
+msgstr "MB skener kolačića"
+
+#: includes/class-mbcc-scanner.php
+msgid "Preparing the manual scan…"
+msgstr "Priprema ručnog skeniranja…"
+
+#: includes/class-mbcc-scanner.php
+msgid "Scanned %1$d of %2$d URLs."
+msgstr "Skenirano je %1$d od %2$d URL-ova."
+
+#: includes/class-mbcc-scanner.php
+msgid "Scan complete. Reloading results…"
+msgstr "Skeniranje je završeno. Učitavanje rezultata…"
+
+#: includes/class-mbcc-scanner.php
+msgid "The scan could not be completed."
+msgstr "Skeniranje nije moglo biti završeno."
+
+#: includes/class-mbcc-scanner.php
+msgid "Manually scan public URLs on this site for new cookie names, scripts and iframes. Cookie values are never stored."
+msgstr "Ručno skenirajte javne URL-ove ovog sajta radi pronalaženja novih naziva kolačića, skripti i iframe elemenata. Vrednosti kolačića se nikada ne čuvaju."
+
+#: includes/class-mbcc-scanner.php
+msgid "Suggestions are informational. Nothing is blocked and no setting is changed until you confirm a category."
+msgstr "Predlozi su informativni. Ništa se ne blokira i nijedno podešavanje se ne menja dok ne potvrdite kategoriju."
+
+#: includes/class-mbcc-scanner.php
+msgid "Start manual scan"
+msgstr "Pokreni ručno skeniranje"
+
+#: includes/class-mbcc-scanner.php
+msgid "New items requiring review"
+msgstr "Nove stavke za pregled"
+
+#: includes/class-mbcc-scanner.php
+msgid "No unreviewed items are currently stored."
+msgstr "Trenutno nema nepregledanih stavki."
+
+#: includes/class-mbcc-scanner.php
+msgid "Cookie"
+msgstr "Kolačić"
+
+#: includes/class-mbcc-scanner.php
+msgid "Script"
+msgstr "Skripta"
+
+#: includes/class-mbcc-scanner.php
+msgid "Iframe"
+msgstr "Iframe"
+
+#: includes/class-mbcc-scanner.php
+msgid "Necessary"
+msgstr "Neophodni"
+
+#: includes/class-mbcc-scanner.php
+msgid "Preferences"
+msgstr "Podešavanja"
+
+#: includes/class-mbcc-scanner.php
+msgid "Analytics"
+msgstr "Analitika"
+
+#: includes/class-mbcc-scanner.php
+msgid "Marketing"
+msgstr "Marketing"
+
+#: includes/class-mbcc-scanner.php
+msgid "Type"
+msgstr "Vrsta"
+
+#: includes/class-mbcc-scanner.php
+msgid "Detected item"
+msgstr "Otkrivena stavka"
+
+#: includes/class-mbcc-scanner.php
+msgid "Example page"
+msgstr "Primer stranice"
+
+#: includes/class-mbcc-scanner.php
+msgid "Category"
+msgstr "Kategorija"
+
+#: includes/class-mbcc-scanner.php
+msgid "Action"
+msgstr "Radnja"
+
+#: includes/class-mbcc-scanner.php
+msgid "Choose category"
+msgstr "Izaberite kategoriju"
+
+#: includes/class-mbcc-scanner.php
+msgid "Add rule"
+msgstr "Dodaj pravilo"
+
+#: includes/class-mbcc-scanner.php
+msgid "Ignore"
+msgstr "Ignoriši"
+
+#: includes/class-mbcc-scanner.php
+msgid "Clear scan history"
+msgstr "Obriši istoriju skeniranja"
+
+#: includes/class-mbcc-scanner.php
+msgid "The scanner cannot guarantee discovery of HttpOnly, third-party or conditionally created cookies. Review the site in a browser as part of every audit."
+msgstr "Skener ne može garantovati otkrivanje HttpOnly, third-party ili uslovno napravljenih kolačića. Pregledajte sajt u browseru kao deo svake provere."
+
+#: includes/class-mbcc-scanner.php
+msgid "The scan job has expired. Start it again."
+msgstr "Skeniranje je isteklo. Pokrenite ga ponovo."
+
+#: includes/class-mbcc-scanner.php
+msgid "Invalid cookie category."
+msgstr "Nevažeća kategorija kolačića."
+
+#: includes/class-mbcc-scanner.php
+msgid "The selected scan result no longer exists."
+msgstr "Izabrani rezultat skeniranja više ne postoji."
+
+#: includes/class-mbcc-scanner.php
+msgid "Unsupported scan result type."
+msgstr "Nepodržana vrsta rezultata skeniranja."
+
+#: includes/class-mbcc-scanner.php
+msgid "You are not allowed to perform this action."
+msgstr "Nemate dozvolu za ovu radnju."

@@ -6,7 +6,7 @@ const vm = require('node:vm');
 const path = require('node:path');
 const source = fs.readFileSync(path.join(__dirname, '../assets/js/frontend.js'), 'utf8');
 
-async function run(readyState, allowed, missingConfig = false) {
+async function run(readyState, allowed, missingConfig = false, externalModule = false) {
     let markupReady = readyState !== 'loading';
     let activated = 0;
     let reloads = 0;
@@ -27,8 +27,21 @@ async function run(readyState, allowed, missingConfig = false) {
             activated++;
             assert.equal(script.id, 'pll_cookie_script-js-after');
             assert.equal(script['data-mbcc-blocked'], undefined);
+            if (externalModule) {
+                assert.equal(script.type, 'module', 'Restore the original module type');
+                assert.equal(script.src, 'https://example.com/module.js?v=1>2', 'Restore the external URL');
+                assert.equal(script.text, undefined, 'External module must not use inline content');
+                assert.equal(script['data-mbcc-type'], undefined);
+                assert.equal(script['data-mbcc-src'], undefined);
+                script.onload();
+            }
         }}
     };
+    if (externalModule) {
+        oldScript.attributes.push({name: 'data-mbcc-type', value: 'module'},
+            {name: 'data-mbcc-src', value: 'https://example.com/module.js?v=1>2'});
+        oldScript.textContent = 'throw new Error("must not execute as inline content")';
+    }
     let cookie = 'mbcc_consent=' + Buffer.from(JSON.stringify({version: '1.0', necessary: allowed,
         preferences: allowed, analytics: allowed, marketing: allowed})).toString('base64url');
     const document = {
@@ -91,5 +104,8 @@ async function run(readyState, allowed, missingConfig = false) {
         for (const allowed of [false, true]) await run(state, allowed);
     }
     await run('loading', false, true);
+    await run('complete', false, false, true);
+    await run('complete', true, false, true);
+    console.log('PASS: external module stays blocked without consent and restores type/src with consent');
     console.log('PASS: missing configuration exits safely');
 })().catch(error => { console.error(error); process.exitCode = 1; });

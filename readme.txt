@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, script blocker, bilingual, google consent mode
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.7
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,6 +25,7 @@ MB Cookie Consent provides:
 * Four banner layouts: full-width bar and floating cards aligned left, right or centre.
 * A persistent control for changing or withdrawing consent.
 * Theme-isolated CSS suitable for standard, classic and Blogsy frontends.
+* A manual same-site audit scanner for new cookie names, scripts and iframes, with category suggestions and administrator-confirmed rule creation.
 
 This plugin is a technical consent tool. Site owners remain responsible for auditing services, configuring every non-essential script/cookie and obtaining legal advice appropriate to their site and visitors.
 
@@ -48,7 +49,11 @@ Yes. The frontend is independent of theme templates and all CSS is scoped to mbc
 
 = Does it automatically discover every cookie? =
 
-No. Version 1.0 blocks configured handles and URL patterns. Dynamic scripts, proxy URLs, server-set cookies and scripts added after page load require a site-specific audit and rules.
+No. The plugin blocks configured handles and URL patterns. Dynamic scripts, proxy URLs, server-set cookies and scripts added after page load require a site-specific audit and rules.
+
+= How does the manual scanner work? =
+
+Open Settings > MB Cookie Scanner and start a scan. It checks up to 250 public same-site URLs in small batches, stores cookie names and resource patterns without cookie values, and asks an administrator to confirm a category before adding a rule. It does not run JavaScript and cannot guarantee discovery of third-party, HttpOnly or conditionally created cookies.
 
 = How do I manually block a script? =
 
@@ -70,6 +75,14 @@ Use shortcode `[mbcc_cookie_settings]`.
 4. Serbian Latin translation of the WordPress administration settings.
 
 == Changelog ==
+
+= 1.1.0 =
+
+* Fix quoted tag boundaries and quoted/unquoted script and iframe attributes, preserving module type and source after consent.
+* Add a manually started, same-site cookie and resource audit scanner.
+* Show only new findings and suggest necessary, preferences, analytics or marketing categories.
+* Require administrator confirmation before adding a cookie, script or iframe rule.
+* Store no cookie values and add no scheduled scans or notifications.
 
 = 1.0.7 =
 

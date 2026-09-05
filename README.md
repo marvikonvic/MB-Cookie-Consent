@@ -1,6 +1,6 @@
 ![MB Cookie Consent banner](.wordpress-org/banner-1544x500.png)
 
-# MB Cookie Consent 1.0.7
+# MB Cookie Consent 1.1.0
 
 ## English
 
@@ -19,6 +19,8 @@ Standalone WordPress plugin providing a bilingual cookie banner and prior blocki
 - four layouts: full-width bar or a floating card aligned left, right or centre;
 - consent withdrawal/change control;
 - `[mbcc_cookie_settings]` shortcode.
+- manually started same-site scanner for new cookie names, scripts and iframes;
+- conservative category suggestions with administrator-confirmed rule creation.
 
 ### Installation and configuration
 
@@ -51,6 +53,7 @@ Allowed categories are `preferences`, `analytics` and `marketing`.
 - Dynamically injected scripts and proxied resources require a dedicated rule or integration change.
 - JavaScript minification or delay can change handles and URLs, so rules should be retested after enabling optimization.
 - A technical plugin is not a legal guarantee of compliance.
+- The manual scanner does not execute JavaScript and cannot guarantee discovery of third-party, HttpOnly or conditionally created cookies.
 
 ## Srpski (latinica)
 
@@ -69,6 +72,8 @@ Samostalan WordPress dodatak za dvojezični baner za kolačiće i blokiranje opc
 - izbor izgleda: puna traka, plutajuća kartica levo, desno ili u sredini;
 - povlačenje ili promena saglasnosti;
 - shortcode `[mbcc_cookie_settings]`.
+- ručno pokretanje skenera javnih URL-ova za nove nazive kolačića, skripte i iframe-ove;
+- predlozi kategorija uz obaveznu potvrdu administratora pre dodavanja pravila.
 
 ### Instalacija i podešavanje
 
@@ -101,6 +106,7 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 - Dinamički ubačene skripte i proxy URL-ovi zahtevaju posebno pravilo ili izmenu integracije.
 - Minifikacija ili odlaganje JavaScripta može promeniti handle ili URL, pa pravila treba proveriti nakon uključivanja optimizacije.
 - Tehnički dodatak ne predstavlja pravnu garanciju usklađenosti.
+- Ručni skener ne izvršava JavaScript i ne može garantovati otkrivanje third-party, HttpOnly ili uslovno napravljenih kolačića.
 
 ## Screenshots
 
@@ -121,6 +127,14 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 ![WordPress administratorska podešavanja na srpskom](.wordpress-org/screenshot-4.png)
 
 ## Changelog
+
+### 1.1.0 — Manual cookie audit / ručni pregled kolačića
+
+- Fixes quoted tag boundaries and quoted/unquoted script and iframe attributes; preserves module type and source through consent activation.
+- Adds a manually started scanner for up to 250 public URLs on the site's own domain, processed in small batches.
+- Records cookie names and normalized script/iframe patterns without storing cookie values.
+- Suggests a category but requires an administrator to confirm it before adding a rule.
+- Includes no scheduled scanning, browser automation or notifications.
 
 ### 1.0.7 — Necessary-cookie description / opis neophodnih kolačića
 
@@ -181,12 +195,13 @@ Browser tracking protection may independently block analytics requests even afte
 ### Automated developer checks
 
 - PHP syntax validation for every shipped PHP file;
-- `php tests/blocker-regression.php` for protection of the plugin runtime/configuration and Polylang inline-script blocking;
+- `php tests/blocker-regression.php` for runtime/configuration protection, Polylang blocking, quoted/unquoted attributes, quoted `>`, duplicate attributes, module metadata and idempotency;
 - `php tests/settings-rules-regression.php` for default-rule precedence, preservation of custom settings, the 1.0.7 text migration, administrator authorization and migration idempotency;
-- `node tests/frontend-regression.cjs` for loading, interactive and complete document states, with preferences allowed and denied, including open, close, reopen and save flows;
+- `php tests/scanner-regression.php` for cookie-name extraction, resource normalization and conservative category suggestions;
+- `node tests/frontend-regression.cjs` for loading, interactive and complete document states, open/close/reopen/save flows, and external module type/source restoration with consent allowed and denied;
 - JavaScript syntax validation for `assets/js/frontend.js`;
 - activation and settings-page runtime checks on WordPress 6.4 with PHP 7.4 and WordPress 7.1 with PHP 8.1;
 - WordPress Plugin Check with all error and warning categories enabled;
 - release ZIP inspection for version metadata, expected root directory and exclusion of repository/development-only files.
 
-The tests under `tests/` use standalone WordPress/DOM doubles and are excluded from the installation ZIP. Version 1.0.7 changes only the necessary-cookie description and its exact-match migration; confirm that migrated wording after installing 1.0.7 in staging and production.
+The tests under `tests/` use standalone WordPress/DOM doubles and are excluded from the installation ZIP. The manual scanner still requires a staging test against the site's real public URLs before version 1.1.0 is deployed to production.

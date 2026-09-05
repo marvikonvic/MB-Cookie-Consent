@@ -172,6 +172,9 @@ final class MBCC_Plugin {
 		$settings = new MBCC_Settings();
 		$settings->register_hooks();
 
+		$scanner = new MBCC_Scanner();
+		$scanner->register_hooks();
+
 		$options = MBCC_Settings::get();
 		if ( empty( $options['enabled'] ) ) {
 			return;
