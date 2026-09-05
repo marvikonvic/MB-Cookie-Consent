@@ -74,7 +74,7 @@ class MBCC_Blocker {
 	}
 
 	/** Rewrite script elements and iframe opening tags without reparsing the document. */
-	private function rewrite_target_tags( $html ) {
+	public function rewrite_target_tags( $html, $visitor = null ) {
 		$cursor = 0;
 		$search = 0;
 		$output = '';
@@ -101,6 +101,13 @@ class MBCC_Blocker {
 			}
 
 			$name = strtolower( $name_match[2] );
+			if ( 'plaintext' === $name ) { break; }
+			if ( in_array( $name, array( 'textarea', 'title', 'style', 'xmp', 'noembed', 'noframes', 'noscript' ), true ) ) {
+				$closing = $this->find_closing_tag( $html, $name, $opening_end + 1 );
+				if ( false === $closing ) { break; }
+				$search = $closing[1] + 1;
+				continue;
+			}
 			if ( 'script' === $name ) {
 				$closing = $this->find_closing_tag( $html, 'script', $opening_end + 1 );
 				if ( false === $closing ) {
@@ -108,7 +115,7 @@ class MBCC_Blocker {
 				}
 				$element_end = $closing[1];
 				$element     = substr( $html, $start, $element_end - $start + 1 );
-				$replacement = $this->filter_script_element( $element );
+				$replacement = $visitor ? call_user_func( $visitor, 'script', $element, $opening ) : $this->filter_script_element( $element );
 				if ( $replacement !== $element ) {
 					$output .= substr( $html, $cursor, $start - $cursor ) . $replacement;
 					$cursor  = $element_end + 1;
@@ -117,14 +124,19 @@ class MBCC_Blocker {
 				continue;
 			}
 
-			if ( 'iframe' === $name && ! empty( $this->options['auto_blocking'] ) ) {
-				$replacement = $this->filter_iframe_tag( $opening );
+			if ( 'iframe' === $name && ( $visitor || ! empty( $this->options['auto_blocking'] ) ) ) {
+				$replacement = $visitor ? call_user_func( $visitor, 'iframe', $opening, $opening ) : $this->filter_iframe_tag( $opening );
 				if ( $replacement !== $opening ) {
 					$output .= substr( $html, $cursor, $start - $cursor ) . $replacement;
 					$cursor  = $opening_end + 1;
 				}
 			}
 			$search = $opening_end + 1;
+			if ( 'iframe' === $name ) {
+				$closing = $this->find_closing_tag( $html, 'iframe', $search );
+				if ( false === $closing ) { break; }
+				$search = $closing[1] + 1;
+			}
 		}
 
 		return $output . substr( $html, $cursor );
@@ -135,7 +147,7 @@ class MBCC_Blocker {
 		if ( $this->is_own_script( $tag ) ) {
 			return $tag;
 		}
-		if ( false !== stripos( $tag, 'data-mbcc-essential' ) || false !== stripos( $tag, 'data-mbcc-blocked' ) ) {
+		if ( $this->has_attribute( $tag, 'data-mbcc-essential' ) || $this->is_inert( $tag, true ) ) {
 			return $tag;
 		}
 
@@ -163,7 +175,7 @@ class MBCC_Blocker {
 
 	/** Apply configured rules to one iframe opening tag. */
 	private function filter_iframe_tag( $tag ) {
-		if ( false !== stripos( $tag, 'data-mbcc-blocked' ) ) {
+		if ( $this->is_inert( $tag, false ) ) {
 			return $tag;
 		}
 
@@ -174,6 +186,7 @@ class MBCC_Blocker {
 		}
 
 		$tag = $this->move_source_to_data( $tag );
+		$tag = $this->remove_attribute( $this->remove_attribute( $tag, 'data-mbcc-blocked' ), 'data-mbcc-category' );
 		return substr_replace( $tag, ' data-mbcc-blocked="1" data-mbcc-category="' . esc_attr( $category ) . '"', -1, 0 );
 	}
 
@@ -222,7 +235,7 @@ class MBCC_Blocker {
 
 	/** Convert an executable script into inert markup. */
 	private function block_script_tag( $tag, $category ) {
-		if ( $this->is_own_script( $tag ) || false !== stripos( $tag, 'data-mbcc-blocked' ) ) {
+		if ( $this->is_own_script( $tag ) || $this->is_inert( $tag, true ) ) {
 			return $tag;
 		}
 
@@ -236,6 +249,7 @@ class MBCC_Blocker {
 		$type      = $this->attribute( $opening, 'type' );
 		$opening   = $this->remove_attribute( $opening, 'type' );
 		$opening   = $this->move_source_to_data( $opening );
+		$opening = $this->remove_attribute( $this->remove_attribute( $opening, 'data-mbcc-blocked' ), 'data-mbcc-category' );
 		$attributes = ' type="text/plain" data-mbcc-blocked="1" data-mbcc-category="' . esc_attr( $category ) . '"';
 		if ( $type && ! in_array( strtolower( $type ), array( 'text/javascript', 'text/plain' ), true ) ) {
 			$attributes .= ' data-mbcc-type="' . esc_attr( $type ) . '"';
@@ -263,13 +277,29 @@ class MBCC_Blocker {
 	}
 
 	/** Extract a quoted or unquoted HTML attribute. */
-	private function attribute( $tag, $name ) {
+	public function attribute( $tag, $name ) {
 		foreach ( $this->parse_attributes( $tag ) as $attribute ) {
 			if ( strtolower( $name ) === $attribute['name'] ) {
 				return trim( $attribute['value'] );
 			}
 		}
 		return '';
+	}
+
+	/** Check actual opening-tag attributes, including boolean attributes. */
+	public function has_attribute( $tag, $name ) {
+		foreach ( $this->parse_attributes( $tag ) as $attribute ) {
+			if ( $name === $attribute['name'] ) { return true; }
+		}
+		return false;
+	}
+
+	/** A marker alone is not proof of an inert resource. */
+	private function is_inert( $tag, $script ) {
+		return '1' === $this->attribute( $tag, 'data-mbcc-blocked' )
+			&& $this->valid_category( $this->attribute( $tag, 'data-mbcc-category' ) )
+			&& ! $this->has_attribute( $tag, 'src' )
+			&& ( ! $script || 'text/plain' === strtolower( $this->attribute( $tag, 'type' ) ) );
 	}
 
 	/** Remove every occurrence, including duplicate attributes. */

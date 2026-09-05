@@ -4,7 +4,7 @@ Tags: cookie consent, gdpr, script blocker, bilingual, google consent mode
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,10 @@ Bilingual Serbian Latin/English cookie banner with cache-safe script and iframe 
 == Description ==
 
 MB Cookie Consent provides:
+
+* A main admin menu with Settings, Scanner, and Cookies and categories submenus.
+* A grouped cookie inventory, category editing and manual cookie records.
+* Informational server/HttpOnly records marked "Server control required"; no universal server-cookie blocking or deletion.
 
 * Serbian Latin and English frontend text.
 * Automatic language detection for WordPress, Polylang and WPML.
@@ -37,7 +41,7 @@ MB Cookie Consent does not send telemetry, usage data or personal data to the pl
 
 1. Upload the plugin ZIP through Plugins > Add New > Upload Plugin.
 2. Activate MB Cookie Consent.
-3. Open Settings > MB Cookie Consent.
+3. Open MB Cookie Consent > Settings.
 4. Add both privacy-policy URLs and review all blocking rules.
 5. Test in a private browser window before using the plugin on production.
 
@@ -53,7 +57,11 @@ No. The plugin blocks configured handles and URL patterns. Dynamic scripts, prox
 
 = How does the manual scanner work? =
 
-Open Settings > MB Cookie Scanner and start a scan. It checks up to 250 public same-site URLs in small batches, stores cookie names and resource patterns without cookie values, and asks an administrator to confirm a category before adding a rule. It does not run JavaScript and cannot guarantee discovery of third-party, HttpOnly or conditionally created cookies.
+Open MB Cookie Consent > MB Cookie Scanner and start a scan. It checks up to 250 public same-site URLs in small batches, stores cookie names and resource patterns without cookie values, and asks an administrator to confirm a category before adding a rule. It does not run JavaScript and cannot guarantee discovery of third-party, HttpOnly or conditionally created cookies.
+
+= How do I edit cookie categories? =
+
+Open MB Cookie Consent > Cookies and categories. Edit a record to update its category, service/domain and optional linked script rule. A wildcard edit affects all matching names; conflicting overlapping patterns require review in Settings. Linked scripts keep their own categories. Server/HttpOnly entries only record your classification and do not create blocking/deletion rules. Cookies with the same name share one record. Clearing scan history retains these records and configured rules. No cookie values are stored.
 
 = How do I manually block a script? =
 
@@ -75,6 +83,19 @@ Use shortcode `[mbcc_cookie_settings]`.
 4. Serbian Latin translation of the WordPress administration settings.
 
 == Changelog ==
+
+= 1.2.0 =
+* Unified main admin menu with settings, scanner and cookie inventory submenus.
+* Category editing, manual records, optional service-rule links and duplicate-rule prevention.
+* Server and HttpOnly metadata marked as requiring server control; informational records only.
+* Capability, nonce, stale-form and overlapping-rule checks for inventory edits.
+* Serbian Latin translations and bilingual README updated; includes the 1.1.1 fixes below.
+
+= 1.1.1 =
+
+* Fix false blocking markers and text-element parser bypasses.
+* Share parsing with the scanner and preserve ports in resource rules.
+* Retain findings after failed rule writes and display failed scan URLs.
 
 = 1.1.0 =
 

@@ -174,6 +174,8 @@ final class MBCC_Plugin {
 
 		$scanner = new MBCC_Scanner();
 		$scanner->register_hooks();
+		$cookies = new MBCC_Cookies();
+		$cookies->register_hooks();
 
 		$options = MBCC_Settings::get();
 		if ( empty( $options['enabled'] ) ) {
@@ -193,6 +195,7 @@ final class MBCC_Plugin {
 	 * @return void
 	 */
 	public function load_textdomain() {
+		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Private GitHub ZIP installations need the bundled Serbian Latin translation path registered.
 		load_plugin_textdomain( 'mb-cookie-consent', false, dirname( plugin_basename( MBCC_FILE ) ) . '/languages' );
 	}
 }

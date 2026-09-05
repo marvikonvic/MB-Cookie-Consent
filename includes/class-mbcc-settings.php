@@ -159,15 +159,17 @@ class MBCC_Settings {
 		);
 	}
 
-	/** Add Settings submenu. */
+	/** Add the shared main menu and its Settings submenu. */
 	public function add_page() {
-		add_options_page(
+		add_menu_page(
 			__( 'MB Cookie Consent', 'mb-cookie-consent' ),
 			__( 'MB Cookie Consent', 'mb-cookie-consent' ),
 			'manage_options',
 			'mb-cookie-consent',
-			array( $this, 'render_page' )
+			array( $this, 'render_page' ),
+			'dashicons-privacy'
 		);
+		add_submenu_page( 'mb-cookie-consent', __( 'Settings', 'mb-cookie-consent' ), __( 'Settings', 'mb-cookie-consent' ), 'manage_options', 'mb-cookie-consent', array( $this, 'render_page' ) );
 	}
 
 	/**
@@ -177,7 +179,7 @@ class MBCC_Settings {
 	 * @return array<int,string>
 	 */
 	public function action_links( $links ) {
-		array_unshift( $links, '<a href="' . esc_url( admin_url( 'options-general.php?page=mb-cookie-consent' ) ) . '">' . esc_html__( 'Settings', 'mb-cookie-consent' ) . '</a>' );
+		array_unshift( $links, '<a href="' . esc_url( admin_url( 'admin.php?page=mb-cookie-consent' ) ) . '">' . esc_html__( 'Settings', 'mb-cookie-consent' ) . '</a>' );
 		return $links;
 	}
 

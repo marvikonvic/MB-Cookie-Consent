@@ -1,0 +1,14 @@
+.mbcc-inventory .widefat { table-layout: fixed; }
+.mbcc-inventory .widefat td { vertical-align: top; overflow-wrap: anywhere; }
+.mbcc-inventory .widefat th:last-child { width: 32%; }
+.mbcc-inventory code { white-space: normal; overflow-wrap: anywhere; }
+.mbcc-inventory form { max-width: 36rem; }
+.mbcc-inventory input:not([type="checkbox"]):not([type="hidden"]),
+.mbcc-inventory select { display: block; width: 100%; max-width: 100%; }
+.mbcc-inventory summary { cursor: pointer; color: #135e96; padding: 4px 0; }
+.mbcc-inventory summary:focus-visible { outline: 2px solid #2271b1; outline-offset: 2px; }
+.mbcc-inventory details[open] summary { font-weight: 600; }
+@media (max-width: 782px) {
+    .mbcc-inventory .widefat th:last-child { width: 40%; }
+    .mbcc-inventory .widefat td, .mbcc-inventory .widefat th { padding: 6px; }
+}

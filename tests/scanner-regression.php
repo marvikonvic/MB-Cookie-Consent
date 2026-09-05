@@ -13,6 +13,7 @@ function mbcc_scanner_assert( $condition, $message ) {
 	}
 }
 
+require_once dirname( __DIR__ ) . '/includes/class-mbcc-blocker.php';
 require_once dirname( __DIR__ ) . '/includes/class-mbcc-scanner.php';
 
 $html = <<<'HTML'
@@ -49,3 +50,22 @@ mbcc_scanner_assert( 'necessary' === MBCC_Scanner::suggest_category( 'cookie', '
 mbcc_scanner_assert( '' === MBCC_Scanner::suggest_category( 'cookie', 'unknown_cookie' ), 'Unknown item should require manual classification.' );
 
 echo "PASS: cookie names, resources, normalization and conservative category suggestions.\n";
+foreach ( array(
+ '<script src=https://example.com/a.js></script>',
+ '<script title="1>2" src="https://example.com/a.js"></script>',
+ '<script data-mbcc-src="https://example.com/a.js" type="text/plain"></script>'
+) as $fixture ) {
+ $found = MBCC_Scanner::extract_items( $fixture );
+ mbcc_scanner_assert( count( $found ) === 1 && 'example.com/a.js' === $found[0]['value'], 'Static resource must be discovered.' );
+}
+foreach ( array(
+ '<!-- <script src="https://example.com/a.js"></script> -->',
+ '<script data-src="https://example.com/a.js"></script>',
+ '<textarea><script src="https://example.com/a.js"></script></textarea>',
+ '<style>/* <script src="https://example.com/a.js"></script> */</style>',
+ '<div title=\'<script src="https://example.com/a.js"></script>\'></div>'
+) as $fixture ) {
+ mbcc_scanner_assert( array() === MBCC_Scanner::extract_items( $fixture ), 'Non-resource text must be ignored.' );
+}
+mbcc_scanner_assert( 'example.com:8080/a.js' === MBCC_Scanner::normalize_resource( 'http://example.com:8080/a.js' ), 'Port must survive normalization.' );
+echo "PASS: scanner contexts, attribute forms and URL ports\n";

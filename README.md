@@ -1,6 +1,6 @@
 ![MB Cookie Consent banner](.wordpress-org/banner-1544x500.png)
 
-# MB Cookie Consent 1.1.0
+# MB Cookie Consent 1.2.0
 
 ## English
 
@@ -21,16 +21,29 @@ Standalone WordPress plugin providing a bilingual cookie banner and prior blocki
 - `[mbcc_cookie_settings]` shortcode.
 - manually started same-site scanner for new cookie names, scripts and iframes;
 - conservative category suggestions with administrator-confirmed rule creation.
+- one main admin menu with Settings, Scanner, and Cookies and categories submenus;
+- grouped cookie inventory with Edit, manual records, service/domain metadata and optional links to existing resource rules;
+- informational server/HttpOnly records marked “Server control required”.
 
 ### Installation and configuration
 
 1. In WordPress Admin, open **Plugins → Add New → Upload Plugin**.
 2. Select the ZIP, install it and activate the plugin.
-3. Open **Settings → MB Cookie Consent**.
+3. Open **MB Cookie Consent → Settings** in the main admin menu.
 4. Enter the Serbian and English privacy-policy URLs.
 5. Review the script handle, URL, iframe and cookie rules.
 6. Change `Consent version` when a policy update requires renewed consent.
 7. Clear the page/optimization cache, CDN/Cloudflare cache and browser cache, then test in a private window.
+
+### Cookie inventory and editing
+
+Open **MB Cookie Consent → Cookies and categories**. The inventory combines recorded cookie names and configured cookie patterns under Necessary, Preferences, Analytics, Marketing and Unclassified. It is not a live list of cookies in each visitor's browser. Use **Edit** to choose a category and save service/domain details or link an existing script/iframe rule for reference.
+
+For browser-cookie rules, saving updates the matching pattern in place and removes exact duplicates. Editing a cookie covered by `_ga*` changes that pattern for all covered names; the form explicitly shows this scope. Conflicting overlapping patterns must be resolved in Settings. Linked scripts retain their own category: edit their blocking rules separately when needed. The required `mbcc_consent` record cannot be reassigned.
+
+Use **Add cookie record** for manual entries, including unclassified cookies. The manual scanner also records cookie names found in returned `Set-Cookie` headers, together with an observed Domain/HttpOnly flag when available. Server-set and HttpOnly records are informational: changing their category does not create blocking or deletion rules. Existing removal rules are not silently removed. Cookies with the same name are consolidated into one record with an example source; this is not a per-domain/path cookie database. Cookie values are never stored. Clearing scan history retains the inventory and configured rules.
+
+After changing categories, review the linked service rules and optionally increase **Consent version** in Settings, clear page/CDN caches and repeat consent tests. Scanning remains manual (up to 250 public URLs, four per batch); there are no scheduled scans or notifications.
 
 ### Manual blocking
 
@@ -47,7 +60,7 @@ Allowed categories are `preferences`, `analytics` and `marketing`.
 ### Important limitations
 
 - The plugin does not automatically crawl the whole site.
-- HttpOnly and server-side cookies cannot be removed by JavaScript.
+- HttpOnly cookies cannot be removed by JavaScript. Server-set cookies may be recreated by the server; this release only inventories them and does not intercept their creation.
 - The `mbcc_consent` cookie remains technically exempt so the visitor's selection can persist between pages.
 - Disabling genuinely necessary cookies may break login, security, cart or other essential site functions.
 - Dynamically injected scripts and proxied resources require a dedicated rule or integration change.
@@ -74,16 +87,29 @@ Samostalan WordPress dodatak za dvojezični baner za kolačiće i blokiranje opc
 - shortcode `[mbcc_cookie_settings]`.
 - ručno pokretanje skenera javnih URL-ova za nove nazive kolačića, skripte i iframe-ove;
 - predlozi kategorija uz obaveznu potvrdu administratora pre dodavanja pravila.
+- jedan glavni admin meni sa podmenijima Podešavanja, Skener i Kolačići i kategorije;
+- grupisan pregled kolačića sa opcijom Izmeni, ručnim unosom i povezivanjem postojećeg pravila skripte;
+- informativna evidencija serverskih/HttpOnly kolačića uz oznaku „Serverska kontrola potrebna“.
 
 ### Instalacija i podešavanje
 
 1. U WordPress Adminu otvorite **Plugins → Add New → Upload Plugin**.
 2. Izaberite ZIP, instalirajte i aktivirajte dodatak.
-3. Otvorite **Settings → MB Cookie Consent**.
+3. Otvorite **MB Cookie Consent → Podešavanja** u glavnom admin meniju.
 4. Unesite srpski i engleski URL politike privatnosti.
 5. Pregledajte script handle, URL, iframe i cookie pravila.
 6. Promenite `Consent version` kada izmena politike zahteva novu saglasnost.
 7. Očistite page/optimization cache, CDN/Cloudflare i browser cache, pa testirajte u privatnom prozoru.
+
+### Pregled i izmena kategorija
+
+Otvorite **MB Cookie Consent → Kolačići i kategorije**. Pregled objedinjuje evidentirane nazive kolačića i podešene obrasce u kategorijama Neophodni, Podešavanja, Analitika, Marketing i Neklasifikovani. To nije živa lista kolačića u pregledaču svakog posetioca. Opcija **Izmeni** omogućava izbor kategorije, unos servisa/domena i povezivanje postojećeg pravila skripte ili iframe-a radi pregleda.
+
+Čuvanje menja postojeći odgovarajući obrazac i uklanja njegove identične duplikate. Ako kolačić pokriva `_ga*`, izmena važi za sve nazive obuhvaćene tim obrascem; forma prikazuje taj obuhvat. Konfliktne obrasce koji se preklapaju treba uskladiti u Podešavanjima. Kategorija povezane skripte menja se zasebno. Obavezni zapis `mbcc_consent` ne može se prebaciti u drugu kategoriju.
+
+Opcija **Dodaj zapis kolačića** podržava ručno evidentiranje i nekategorisane stavke. Ručni skener evidentira nazive iz primljenih `Set-Cookie` zaglavlja, uz domen i HttpOnly oznaku kada su dostupni. Serverski i HttpOnly zapisi su informativni: promena kategorije ne dodaje pravila blokiranja ili brisanja. Postojeća pravila uklanjanja ne brišu se automatski. Isti naziv se objedinjuje u jedan zapis sa primerom izvora, bez posebnih zapisa za svaki domen/putanju. Vrednosti kolačića se ne čuvaju. Brisanje istorije skeniranja zadržava pregled kolačića i pravila.
+
+Posle izmene pregledajte pravila povezanih servisa, po potrebi povećajte **Verziju saglasnosti**, očistite page/CDN keš i ponovite test prihvatanja i odbijanja. Skener se pokreće samo ručno, za najviše 250 javnih URL-ova u paketima po četiri; nema periodičnih skeniranja ni obaveštenja.
 
 ### Ručno blokiranje
 
@@ -100,7 +126,7 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 ### Važna ograničenja
 
 - Dodatak ne skenira automatski ceo sajt.
-- HttpOnly i server-side kolačići ne mogu se ukloniti JavaScriptom.
+- HttpOnly kolačići ne mogu se ukloniti JavaScriptom. Server može ponovo postaviti serverski kolačić; ova verzija ih evidentira i ne presreće njihovo postavljanje.
 - Kolačić `mbcc_consent`, koji pamti izbor posetioca, ostaje tehnički izuzet; bez njega izbor ne može da se sačuva između stranica.
 - Isključivanje stvarno neophodnih kolačića može prekinuti prijavu, bezbednost, korpu ili druge osnovne funkcije.
 - Dinamički ubačene skripte i proxy URL-ovi zahtevaju posebno pravilo ili izmenu integracije.
@@ -127,6 +153,23 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 ![WordPress administratorska podešavanja na srpskom](.wordpress-org/screenshot-4.png)
 
 ## Changelog
+
+### 1.2.0 — Unified menu and cookie inventory / objedinjeni meni i pregled kolačića
+
+- EN: One main menu with Settings, Scanner, and Cookies and categories; corrected scanner assets and admin links.
+- SR: Jedan glavni meni sa podmenijima Podešavanja, Skener i Kolačići i kategorije, uz ispravne admin linkove.
+- EN: Manual cookie records, category editing without duplicate rules, linked resource-rule references, stale-form protection and preserved site settings.
+- SR: Ručni zapisi, izmena kategorija bez dupliranja pravila, povezivanje pravila servisa i zaštita zastarelih formi.
+- EN/SR: Server/HttpOnly metadata is informational only / serverski i HttpOnly podaci služe samo za evidenciju.
+- Includes the previously unreleased 1.1.1 fixes below. / Uključuje prethodno neobjavljene ispravke 1.1.1 navedene ispod.
+
+### 1.1.1 — Blocker and scanner fixes
+
+- Validate actual blocking attributes and skip text-element contents when locating scripts.
+- Share attribute/context parsing with the scanner; preserve URL ports.
+- Retain findings when rule saving fails and show successful/failed scan counts with failed URLs.
+- Add regression coverage for parser bypasses, scanner discovery, authorization and persistence failures.
+
 
 ### 1.1.0 — Manual cookie audit / ručni pregled kolačića
 
@@ -177,7 +220,7 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 
 ## Verification
 
-The plugin has been tested in staging and production environments. The following checks were performed:
+Earlier builds have been tested in staging and production environments. These historical checks do not by themselves certify the new 1.2.0 inventory UI. The following checks were performed:
 
 ### Staging and production
 
@@ -194,14 +237,18 @@ Browser tracking protection may independently block analytics requests even afte
 
 ### Automated developer checks
 
+For 1.2.0, disposable WordPress Playground runs passed on WordPress **6.4.10 / PHP 7.4.33** and **7.1 / PHP 8.1.34**: activation, the three submenu registrations, inventory rendering, scanner asset loading, real-database category edits, server-only records and repeated scanning without duplicate or reappearing reviewed items. Plugin Check reported no errors or warnings after fixes. A narrow documented PHPCS exclusion retains `load_plugin_textdomain()` for bundled translations in private GitHub ZIP installations. These local checks are separate from the historical site tests above.
+
 - PHP syntax validation for every shipped PHP file;
 - `php tests/blocker-regression.php` for runtime/configuration protection, Polylang blocking, quoted/unquoted attributes, quoted `>`, duplicate attributes, module metadata and idempotency;
 - `php tests/settings-rules-regression.php` for default-rule precedence, preservation of custom settings, the 1.0.7 text migration, administrator authorization and migration idempotency;
+- `php tests/scanner-state-regression.php` verifies rule-write failures, authorization and persisted failed-URL summaries;
 - `php tests/scanner-regression.php` for cookie-name extraction, resource normalization and conservative category suggestions;
+- `php tests/cookies-regression.php` for editing, wildcard scope, duplicate prevention, metadata-only server records, rescan preservation, authorization, stale forms and write failures;
 - `node tests/frontend-regression.cjs` for loading, interactive and complete document states, open/close/reopen/save flows, and external module type/source restoration with consent allowed and denied;
 - JavaScript syntax validation for `assets/js/frontend.js`;
 - activation and settings-page runtime checks on WordPress 6.4 with PHP 7.4 and WordPress 7.1 with PHP 8.1;
 - WordPress Plugin Check with all error and warning categories enabled;
 - release ZIP inspection for version metadata, expected root directory and exclusion of repository/development-only files.
 
-The tests under `tests/` use standalone WordPress/DOM doubles and are excluded from the installation ZIP. The manual scanner still requires a staging test against the site's real public URLs before version 1.1.0 is deployed to production.
+The standalone regression tests use WordPress/DOM doubles and are excluded from the installation ZIP. The user also confirmed manual scanning and Add rule on their site, plus Edge first-visit, accept-all and analytics withdrawal behavior in the preceding build. The new 1.2.0 menu and inventory require a site-specific staging check before production deployment.

@@ -12,4 +12,6 @@ if ( is_array( $mbcc_settings ) && ! empty( $mbcc_settings['delete_data_on_unins
 	delete_option( 'mbcc_settings' );
 	delete_option( 'mbcc_rules_version' );
 	delete_option( 'mbcc_scan_results' );
+	delete_option( 'mbcc_scan_summary' );
+	delete_option( 'mbcc_cookie_inventory' );
 }

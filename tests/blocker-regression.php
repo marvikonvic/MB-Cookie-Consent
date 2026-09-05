@@ -81,3 +81,19 @@ foreach ( array( 'var x="<\/script>";', 'var x="</script";', 'var x="</script>";
 	check( $result === $edge->filter_html( $result ), 'Closing-tag fixture is idempotent' );
 }
 echo "PASS: attribute forms, module metadata, quoted >, duplicate attributes and idempotency\n";
+foreach ( array(
+ '<script data-note="data-mbcc-blocked" src="https://example.com/a.js"></script>',
+ '<script src="https://example.com/a.js">/* data-mbcc-essential */</script>',
+ '<script data-mbcc-blocked="1" src="https://example.com/a.js"></script>',
+) as $tag ) {
+ $result = $edge->filter_html( '<html>' . $tag . '</html>' );
+ check( false !== strpos( $result, 'type="text/plain"' ) && ! preg_match( '/\\ssrc\\s*=/', $result ), 'Fake markers do not bypass blocking' );
+ check( $result === $edge->filter_html( $result ), 'Repaired markers remain idempotent' );
+}
+foreach ( array( 'textarea', 'title', 'style', 'xmp', 'noembed', 'noframes', 'noscript', 'iframe' ) as $context ) {
+ $prefix = '<' . $context . '><script></' . $context . '>';
+ $result = $edge->filter_html( '<html>' . $prefix . '<script src="https://example.com/a.js"></script></html>' );
+ check( false !== strpos( $result, $prefix ), 'Text context preserved: ' . $context );
+ check( false !== strpos( $result, 'data-mbcc-src="https://example.com/a.js"' ), 'Real following script blocked: ' . $context );
+}
+echo "PASS: real marker attributes and text-element contexts\n";

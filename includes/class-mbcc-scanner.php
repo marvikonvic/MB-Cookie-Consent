@@ -8,7 +8,9 @@
 defined( 'ABSPATH' ) || exit;
 
 class MBCC_Scanner {
+	private $page_hook = '';
 	const RESULTS_OPTION = 'mbcc_scan_results';
+	const SUMMARY_OPTION = 'mbcc_scan_summary';
 	const JOB_PREFIX     = 'mbcc_scan_job_';
 	const MAX_URLS       = 250;
 	const BATCH_SIZE     = 4;
@@ -29,9 +31,10 @@ class MBCC_Scanner {
 		add_action( 'admin_post_mbcc_clear_scan_results', array( $this, 'clear_results' ) );
 	}
 
-	/** Add a dedicated scanner page below Settings. */
+	/** Add the scanner below the shared plugin menu. */
 	public function add_page() {
-		add_options_page(
+		$this->page_hook = add_submenu_page(
+			'mb-cookie-consent',
 			__( 'MB Cookie Scanner', 'mb-cookie-consent' ),
 			__( 'MB Cookie Scanner', 'mb-cookie-consent' ),
 			'manage_options',
@@ -42,7 +45,7 @@ class MBCC_Scanner {
 
 	/** Load scanner JavaScript only on its own screen. */
 	public function enqueue( $hook_suffix ) {
-		if ( 'settings_page_mb-cookie-consent-scanner' !== $hook_suffix ) {
+		if ( $this->page_hook !== $hook_suffix ) {
 			return;
 		}
 
@@ -54,6 +57,7 @@ class MBCC_Scanner {
 				'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
 				'nonce'    => wp_create_nonce( 'mbcc_scan' ),
 				'starting' => __( 'Preparing the manual scan…', 'mb-cookie-consent' ),
+				/* translators: 1: processed URLs, 2: total URLs. */
 				'scanning' => __( 'Scanned %1$d of %2$d URLs.', 'mb-cookie-consent' ),
 				'finished' => __( 'Scan complete. Reloading results…', 'mb-cookie-consent' ),
 				'failed'   => __( 'The scan could not be completed.', 'mb-cookie-consent' ),
@@ -67,6 +71,7 @@ class MBCC_Scanner {
 			return;
 		}
 
+		$summary = get_option( self::SUMMARY_OPTION, array() );
 		$results = get_option( self::RESULTS_OPTION, array() );
 		$results = is_array( $results ) ? $results : array();
 		$pending = array_filter(
@@ -93,6 +98,15 @@ class MBCC_Scanner {
 			<p><?php echo esc_html__( 'Suggestions are informational. Nothing is blocked and no setting is changed until you confirm a category.', 'mb-cookie-consent' ); ?></p>
 			<p><button type="button" class="button button-primary" id="mbcc-start-scan"><?php echo esc_html__( 'Start manual scan', 'mb-cookie-consent' ); ?></button></p>
 			<div id="mbcc-scan-progress" role="status" aria-live="polite"></div>
+			<?php if ( is_array( $summary ) && isset( $summary['total'], $summary['errors'] ) ) : ?>
+				<p role="status"><?php
+					/* translators: 1: successful URLs, 2: failed URLs, 3: total URLs. */
+					echo esc_html( sprintf( __( 'Scan finished: %1$d successful, %2$d failed, %3$d total URLs.', 'mb-cookie-consent' ), $summary['total'] - $summary['errors'], $summary['errors'], $summary['total'] ) );
+				?></p>
+				<?php if ( ! empty( $summary['failed_urls'] ) ) : ?>
+					<ul><?php foreach ( $summary['failed_urls'] as $failed_url ) : ?><li><?php echo esc_html( $failed_url ); ?></li><?php endforeach; ?></ul>
+				<?php endif; ?>
+			<?php endif; ?>
 
 			<h2><?php echo esc_html__( 'New items requiring review', 'mb-cookie-consent' ); ?></h2>
 			<?php if ( empty( $pending ) ) : ?>
@@ -105,7 +119,7 @@ class MBCC_Scanner {
 						<?php $form_id = 'mbcc-add-rule-' . $id; ?>
 						<tr>
 							<td><?php echo esc_html( isset( $type_labels[ $item['type'] ] ) ? $type_labels[ $item['type'] ] : $item['type'] ); ?></td>
-							<td><code><?php echo esc_html( $item['value'] ); ?></code></td>
+							<td><code><?php echo esc_html( $item['value'] ); ?></code><?php if ( ! empty( $item['server'] ) ) : ?><p><?php echo esc_html__( 'Server control required', 'mb-cookie-consent' ); ?><?php echo ! empty( $item['httponly'] ) ? ' (HttpOnly)' : ''; ?></p><?php endif; ?></td>
 							<td><a href="<?php echo esc_url( $item['source_url'] ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $item['source_url'] ); ?></a></td>
 							<td>
 									<select name="category" form="<?php echo esc_attr( $form_id ); ?>" required>
@@ -120,7 +134,7 @@ class MBCC_Scanner {
 									<input type="hidden" name="action" value="mbcc_add_scan_rule">
 									<input type="hidden" name="item_id" value="<?php echo esc_attr( $id ); ?>">
 									<?php wp_nonce_field( 'mbcc_scan_item_' . $id ); ?>
-									<button class="button button-primary" type="submit"><?php echo esc_html__( 'Add rule', 'mb-cookie-consent' ); ?></button>
+									<button class="button button-primary" type="submit"><?php echo ! empty( $item['server'] ) ? esc_html__( 'Save record', 'mb-cookie-consent' ) : esc_html__( 'Add rule', 'mb-cookie-consent' ); ?></button>
 								</form>
 								<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" style="display:inline-block;margin-top:4px">
 									<input type="hidden" name="action" value="mbcc_ignore_scan_item">
@@ -149,7 +163,8 @@ class MBCC_Scanner {
 	public function start_scan() {
 		$this->authorize_ajax();
 		$urls = $this->collect_urls();
-		$job  = array( 'urls' => $urls, 'offset' => 0, 'errors' => 0 );
+		$job  = array( 'urls' => $urls, 'offset' => 0, 'errors' => 0, 'failed_urls' => array() );
+		delete_option( self::SUMMARY_OPTION );
 		set_transient( self::JOB_PREFIX . get_current_user_id(), $job, HOUR_IN_SECONDS );
 		wp_send_json_success( array( 'total' => count( $urls ) ) );
 	}
@@ -167,12 +182,14 @@ class MBCC_Scanner {
 		foreach ( $batch as $url ) {
 			if ( ! $this->scan_url( $url ) ) {
 				++$job['errors'];
+				$job['failed_urls'][] = $url;
 			}
 		}
 		$job['offset'] += count( $batch );
 		$remaining      = max( 0, count( $job['urls'] ) - $job['offset'] );
 
 		if ( 0 === $remaining ) {
+			update_option( self::SUMMARY_OPTION, array( 'total' => count( $job['urls'] ), 'errors' => $job['errors'], 'failed_urls' => isset( $job['failed_urls'] ) ? $job['failed_urls'] : array() ), false );
 			delete_transient( $key );
 		} else {
 			set_transient( $key, $job, HOUR_IN_SECONDS );
@@ -183,8 +200,11 @@ class MBCC_Scanner {
 
 	/** Add a confirmed result to the corresponding blocking-rule setting. */
 	public function add_rule() {
-		$this->authorize_item_action();
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to perform this action.', 'mb-cookie-consent' ) );
+		}
 		$id       = isset( $_POST['item_id'] ) ? sanitize_key( wp_unslash( $_POST['item_id'] ) ) : '';
+		check_admin_referer( 'mbcc_scan_item_' . $id );
 		$category = isset( $_POST['category'] ) ? sanitize_key( wp_unslash( $_POST['category'] ) ) : '';
 		if ( ! in_array( $category, array( 'necessary', 'preferences', 'analytics', 'marketing' ), true ) ) {
 			wp_die( esc_html__( 'Invalid cookie category.', 'mb-cookie-consent' ) );
@@ -196,6 +216,14 @@ class MBCC_Scanner {
 		}
 
 		$item = $results[ $id ];
+		if ( 'cookie' === $item['type'] && class_exists( 'MBCC_Cookies' ) && ! empty( $item['server'] ) ) {
+			if ( ! MBCC_Cookies::record( $item, $category ) ) {
+				wp_die( esc_html__( 'The record could not be saved. Please try again.', 'mb-cookie-consent' ) );
+			}
+			unset( $results[ $id ] );
+			update_option( self::RESULTS_OPTION, $results, false );
+			$this->redirect();
+		}
 		$map  = array( 'cookie' => 'cookie_patterns', 'script' => 'script_patterns', 'iframe' => 'iframe_patterns' );
 		if ( empty( $map[ $item['type'] ] ) ) {
 			wp_die( esc_html__( 'Unsupported scan result type.', 'mb-cookie-consent' ) );
@@ -207,7 +235,9 @@ class MBCC_Scanner {
 		$stored   = isset( $settings[ $key ] ) ? (string) $settings[ $key ] : '';
 		if ( ! self::has_rule_value( $stored, $item['value'], 'cookie' === $item['type'] ) ) {
 			$settings[ $key ] = $stored . ( '' === $stored || preg_match( '/(?:\r\n|\r|\n)$/', $stored ) ? '' : "\n" ) . $item['value'] . '|' . $category;
-			update_option( MBCC_Settings::OPTION_NAME, $settings, true );
+			if ( ! update_option( MBCC_Settings::OPTION_NAME, $settings, true ) ) {
+				wp_die( esc_html__( 'The rule could not be saved. The finding was retained; please try again.', 'mb-cookie-consent' ) );
+			}
 		}
 
 		unset( $results[ $id ] );
@@ -217,8 +247,11 @@ class MBCC_Scanner {
 
 	/** Keep an ignored item from reappearing until scan history is cleared. */
 	public function ignore_item() {
-		$this->authorize_item_action();
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to perform this action.', 'mb-cookie-consent' ) );
+		}
 		$id      = isset( $_POST['item_id'] ) ? sanitize_key( wp_unslash( $_POST['item_id'] ) ) : '';
+		check_admin_referer( 'mbcc_scan_item_' . $id );
 		$results = get_option( self::RESULTS_OPTION, array() );
 		if ( is_array( $results ) && isset( $results[ $id ] ) ) {
 			$results[ $id ]['status'] = 'ignored';
@@ -234,6 +267,7 @@ class MBCC_Scanner {
 		}
 		check_admin_referer( 'mbcc_clear_scan_results' );
 		delete_option( self::RESULTS_OPTION );
+		delete_option( self::SUMMARY_OPTION );
 		delete_transient( self::JOB_PREFIX . get_current_user_id() );
 		$this->redirect();
 	}
@@ -281,17 +315,23 @@ class MBCC_Scanner {
 		$settings = MBCC_Settings::get();
 
 		foreach ( $items as $item ) {
-			if ( self::configured( $item, $settings ) ) {
-				continue;
+			$item['source_url'] = $url;
+			if ( 'cookie' === $item['type'] && class_exists( 'MBCC_Cookies' ) ) {
+				if ( ! MBCC_Cookies::record( $item ) ) { return false; }
 			}
 			$id = sha1( $item['type'] . '|' . strtolower( $item['value'] ) );
+			if ( self::configured( $item, $settings ) ) {
+				unset( $results[ $id ] );
+				continue;
+			}
 			if ( isset( $results[ $id ] ) ) {
+				$results[ $id ] = array_merge( $results[ $id ], $item );
 				continue;
 			}
 			if ( count( $results ) >= self::MAX_RESULTS ) {
 				break;
 			}
-			$results[ $id ] = array( 'type' => $item['type'], 'value' => sanitize_text_field( $item['value'] ), 'source_url' => $url, 'suggested_category' => self::suggest_category( $item['type'], $item['value'] ), 'status' => '' );
+			$results[ $id ] = array_merge( $item, array( 'value' => sanitize_text_field( $item['value'] ), 'suggested_category' => self::suggest_category( $item['type'], $item['value'] ), 'status' => '' ) );
 		}
 		update_option( self::RESULTS_OPTION, $results, false );
 		return true;
@@ -302,31 +342,36 @@ class MBCC_Scanner {
 		$items = array();
 		$headers = is_array( $set_cookie ) ? $set_cookie : array( (string) $set_cookie );
 		foreach ( $headers as $header ) {
-			if ( preg_match_all( '/(?:^|,\s*)([!#$%&\'*+.^_`|~0-9A-Za-z-]+)=/', $header, $matches ) ) {
-				foreach ( $matches[1] as $name ) {
-					$items[] = array( 'type' => 'cookie', 'value' => $name );
+			foreach ( preg_split( '/,\s*(?=[!#$%&\'*+.^_`|~0-9A-Za-z-]+=)/', $header ) as $cookie_header ) {
+				if ( preg_match( '/^\s*([!#$%&\'*+.^_`|~0-9A-Za-z-]+)=/', $cookie_header, $match ) ) {
+					$domain = preg_match( '/;\s*Domain=([^;]+)/i', $cookie_header, $domain_match ) ? trim( $domain_match[1] ) : '';
+					$items[] = array( 'type' => 'cookie', 'value' => $match[1], 'server' => true, 'httponly' => (bool) preg_match( '/;\s*HttpOnly\s*(?:;|$)/i', $cookie_header ), 'domain' => $domain );
 				}
 			}
 		}
-		if ( preg_match_all( '/document\.cookie\s*=\s*(["\'])([!#$%&*+.^_`|~0-9A-Za-z-]+)=/i', (string) $html, $matches ) ) {
-			foreach ( $matches[2] as $name ) {
-				$items[] = array( 'type' => 'cookie', 'value' => $name );
-			}
-		}
-		foreach ( array( 'script', 'iframe' ) as $type ) {
-			if ( preg_match_all( '/<' . $type . '\b[^>]*(?:data-mbcc-src|src)\s*=\s*(["\'])(.*?)\1/is', (string) $html, $matches ) ) {
-				foreach ( $matches[2] as $source ) {
+		$parser = new MBCC_Blocker( array( 'script_handles' => '', 'script_patterns' => '', 'iframe_patterns' => '', 'auto_blocking' => 0 ) );
+		$parser->rewrite_target_tags(
+			(string) $html,
+			static function ( $type, $element, $opening ) use ( &$items, $parser ) {
+				$source = $parser->has_attribute( $opening, 'src' ) ? $parser->attribute( $opening, 'src' ) : $parser->attribute( $opening, 'data-mbcc-src' );
+				if ( '' !== $source ) {
 					$value = self::normalize_resource( html_entity_decode( $source, ENT_QUOTES, 'UTF-8' ) );
-					if ( '' !== $value ) {
-						$items[] = array( 'type' => $type, 'value' => $value );
+					if ( '' !== $value ) { $items[] = array( 'type' => $type, 'value' => $value ); }
+				}
+				if ( 'script' === $type ) {
+					$body = substr( $element, strlen( $opening ) );
+					if ( preg_match_all( '/document\\.cookie\\s*=\\s*(["\\\'])([!#$%&*+.^_`|~0-9A-Za-z-]+)=/i', $body, $matches ) ) {
+						foreach ( $matches[2] as $name ) { $items[] = array( 'type' => 'cookie', 'value' => $name ); }
 					}
 				}
+				return $element;
 			}
-		}
+		);
 
 		$unique = array();
 		foreach ( $items as $item ) {
-			$unique[ $item['type'] . '|' . strtolower( $item['value'] ) ] = $item;
+			$key = $item['type'] . '|' . strtolower( $item['value'] );
+			$unique[ $key ] = array_merge( isset( $unique[ $key ] ) ? $unique[ $key ] : array(), $item );
 		}
 		return array_values( $unique );
 	}
@@ -343,7 +388,8 @@ class MBCC_Scanner {
 		$host = wp_parse_url( $url, PHP_URL_HOST );
 		$path = wp_parse_url( $url, PHP_URL_PATH );
 		if ( $host ) {
-			return strtolower( $host ) . ( $path ? $path : '' );
+			$port = wp_parse_url( $url, PHP_URL_PORT );
+			return strtolower( $host ) . ( null !== $port && false !== $port ? ':' . $port : '' ) . ( $path ? $path : '' );
 		}
 		return strtok( ltrim( $url, '/' ), '?#' );
 	}
@@ -369,6 +415,12 @@ class MBCC_Scanner {
 
 	/** Check whether a finding already has a configured rule. */
 	private static function configured( $item, $settings ) {
+		if ( 'cookie' === $item['type'] && class_exists( 'MBCC_Cookies' ) ) {
+			$records = get_option( MBCC_Cookies::OPTION_NAME, array() );
+			$id = sha1( strtolower( $item['value'] ) );
+			if ( 'mbcc_consent' === strtolower( $item['value'] ) || ( ! empty( $records[ $id ]['server'] ) && ! empty( $records[ $id ]['category'] ) ) ) { return true; }
+			if ( ! empty( $item['server'] ) ) { return false; }
+		}
 		if ( 'script' === $item['type'] && false !== stripos( $item['value'], '/mb-cookie-consent/assets/' ) ) {
 			return true;
 		}
@@ -412,18 +464,9 @@ class MBCC_Scanner {
 		check_ajax_referer( 'mbcc_scan', 'nonce' );
 	}
 
-	/** Check capability and result-specific nonce. */
-	private function authorize_item_action() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to perform this action.', 'mb-cookie-consent' ) );
-		}
-		$id = isset( $_POST['item_id'] ) ? sanitize_key( wp_unslash( $_POST['item_id'] ) ) : '';
-		check_admin_referer( 'mbcc_scan_item_' . $id );
-	}
-
 	/** Return to the scanner page. */
 	private function redirect() {
-		wp_safe_redirect( admin_url( 'options-general.php?page=mb-cookie-consent-scanner' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=mb-cookie-consent-scanner' ) );
 		exit;
 	}
 }

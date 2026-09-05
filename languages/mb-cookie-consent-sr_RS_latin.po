@@ -1,31 +1,33 @@
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: MB Cookie Consent 1.1.0\n"
+"Project-Id-Version: MB Cookie Consent 1.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/mb-cookie-consent/\n"
+"POT-Creation-Date: 2026-09-04T18:37:15+00:00\n"
+"PO-Revision-Date: 2026-09-04 20:40+0200\n"
 "Last-Translator: marvikonvic\n"
 "Language-Team: Serbian (Latin) <https://translate.wordpress.org/locale/sr/latin/>\n"
+"Language: sr_RS_latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-04T18:37:15+00:00\n"
-"PO-Revision-Date: 2026-09-04 20:40+0200\n"
-"Language: sr_RS_latin\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Codex\n"
 "X-Domain: mb-cookie-consent\n"
+"X-Generator: Codex\n"
 
 #. Plugin Name of the plugin
-#: mb-cookie-consent.php
-#: includes/class-mbcc-settings.php:145
-#: includes/class-mbcc-settings.php:146
-#: includes/class-mbcc-settings.php:219
+#: mb-cookie-consent.php includes/class-mbcc-settings.php:145
+#: includes/class-mbcc-settings.php:146 includes/class-mbcc-settings.php:219
 msgid "MB Cookie Consent"
 msgstr "MB saglasnost za kolačiće"
 
 #. Description of the plugin
 #: mb-cookie-consent.php
-msgid "Bilingual, privacy-first cookie consent and script blocking for WordPress."
-msgstr "Dvojezična saglasnost za kolačiće i blokiranje skripti sa privatnošću na prvom mestu za WordPress."
+msgid ""
+"Bilingual, privacy-first cookie consent and script blocking for WordPress."
+msgstr ""
+"Dvojezična saglasnost za kolačiće i blokiranje skripti sa privatnošću na "
+"prvom mestu za WordPress."
 
 #. Author of the plugin
 #: mb-cookie-consent.php
@@ -37,8 +39,12 @@ msgid "Settings"
 msgstr "Podešavanja"
 
 #: includes/class-mbcc-settings.php:220
-msgid "Bilingual consent banner and cache-safe blocking for standard WordPress frontends, classic themes and Blogsy."
-msgstr "Dvojezični baner za saglasnost i blokiranje bezbedno za keširanje za standardni WordPress frontend, klasične teme i Blogsy."
+msgid ""
+"Bilingual consent banner and cache-safe blocking for standard WordPress "
+"frontends, classic themes and Blogsy."
+msgstr ""
+"Dvojezični baner za saglasnost i blokiranje bezbedno za keširanje za "
+"standardni WordPress frontend, klasične teme i Blogsy."
 
 #: includes/class-mbcc-settings.php:224
 msgid "General"
@@ -118,7 +124,9 @@ msgstr "Verzija saglasnosti"
 
 #: includes/class-mbcc-settings.php:238
 msgid "Change this value to ask every visitor for consent again."
-msgstr "Promenite ovu vrednost da biste od svakog posetioca ponovo zatražili saglasnost."
+msgstr ""
+"Promenite ovu vrednost da biste od svakog posetioca ponovo zatražili "
+"saglasnost."
 
 #: includes/class-mbcc-settings.php:239
 msgid "Consent lifetime (days)"
@@ -153,8 +161,12 @@ msgid "Blocking rules"
 msgstr "Pravila blokiranja"
 
 #: includes/class-mbcc-settings.php:252
-msgid "Use one rule per line in the format value|category. Allowed categories: necessary, preferences, analytics, marketing."
-msgstr "Koristite jedno pravilo po redu u formatu vrednost|kategorija. Dozvoljene kategorije: necessary, preferences, analytics, marketing."
+msgid ""
+"Use one rule per line in the format value|category. Allowed categories: "
+"necessary, preferences, analytics, marketing."
+msgstr ""
+"Koristite jedno pravilo po redu u formatu vrednost|kategorija. Dozvoljene "
+"kategorije: necessary, preferences, analytics, marketing."
 
 #: includes/class-mbcc-settings.php:254
 msgid "Enable URL-based script and iframe blocking"
@@ -209,12 +221,21 @@ msgid "The scan could not be completed."
 msgstr "Skeniranje nije moglo biti završeno."
 
 #: includes/class-mbcc-scanner.php
-msgid "Manually scan public URLs on this site for new cookie names, scripts and iframes. Cookie values are never stored."
-msgstr "Ručno skenirajte javne URL-ove ovog sajta radi pronalaženja novih naziva kolačića, skripti i iframe elemenata. Vrednosti kolačića se nikada ne čuvaju."
+msgid ""
+"Manually scan public URLs on this site for new cookie names, scripts and "
+"iframes. Cookie values are never stored."
+msgstr ""
+"Ručno skenirajte javne URL-ove ovog sajta radi pronalaženja novih naziva "
+"kolačića, skripti i iframe elemenata. Vrednosti kolačića se nikada ne "
+"čuvaju."
 
 #: includes/class-mbcc-scanner.php
-msgid "Suggestions are informational. Nothing is blocked and no setting is changed until you confirm a category."
-msgstr "Predlozi su informativni. Ništa se ne blokira i nijedno podešavanje se ne menja dok ne potvrdite kategoriju."
+msgid ""
+"Suggestions are informational. Nothing is blocked and no setting is changed "
+"until you confirm a category."
+msgstr ""
+"Predlozi su informativni. Ništa se ne blokira i nijedno podešavanje se ne "
+"menja dok ne potvrdite kategoriju."
 
 #: includes/class-mbcc-scanner.php
 msgid "Start manual scan"
@@ -293,8 +314,13 @@ msgid "Clear scan history"
 msgstr "Obriši istoriju skeniranja"
 
 #: includes/class-mbcc-scanner.php
-msgid "The scanner cannot guarantee discovery of HttpOnly, third-party or conditionally created cookies. Review the site in a browser as part of every audit."
-msgstr "Skener ne može garantovati otkrivanje HttpOnly, third-party ili uslovno napravljenih kolačića. Pregledajte sajt u browseru kao deo svake provere."
+msgid ""
+"The scanner cannot guarantee discovery of HttpOnly, third-party or "
+"conditionally created cookies. Review the site in a browser as part of every"
+" audit."
+msgstr ""
+"Skener ne može garantovati otkrivanje HttpOnly, third-party ili uslovno "
+"napravljenih kolačića. Pregledajte sajt u browseru kao deo svake provere."
 
 #: includes/class-mbcc-scanner.php
 msgid "The scan job has expired. Start it again."
@@ -315,3 +341,128 @@ msgstr "Nepodržana vrsta rezultata skeniranja."
 #: includes/class-mbcc-scanner.php
 msgid "You are not allowed to perform this action."
 msgstr "Nemate dozvolu za ovu radnju."
+
+#: includes/class-mbcc-scanner.php
+#, php-format
+msgid "Scan finished: %1$d successful, %2$d failed, %3$d total URLs."
+msgstr ""
+"Skeniranje završeno: %1$d uspešnih, %2$d neuspešnih, ukupno %3$d URL-ova."
+
+#: includes/class-mbcc-scanner.php
+msgid ""
+"The rule could not be saved. The finding was retained; please try again."
+msgstr "Pravilo nije sačuvano. Nalaz je zadržan; pokušajte ponovo."
+
+msgid "Cookies and categories"
+msgstr "Kolačići i kategorije"
+
+msgid "Unclassified"
+msgstr "Neklasifikovani"
+
+msgid "Invalid cookie name or category."
+msgstr "Neispravan naziv ili kategorija kolačića."
+
+msgid "Settings changed. Reload the page before saving."
+msgstr "Podešavanja su promenjena. Osvežite stranicu pre čuvanja."
+
+msgid "The cookie inventory is full."
+msgstr "Evidencija kolačića je popunjena."
+
+msgid "Invalid linked rule."
+msgstr "Neispravno povezano pravilo."
+
+msgid ""
+"A configured rule requires a category. Remove the rule in Settings to leave "
+"it unclassified."
+msgstr ""
+"Podešeno pravilo zahteva kategoriju. Uklonite pravilo u Podešavanjima da "
+"stavka ostane nekategorisana."
+
+msgid ""
+"Overlapping cookie patterns use different categories. Resolve them in "
+"Settings before moving this cookie."
+msgstr ""
+"Obrasci koji se preklapaju koriste različite kategorije. Uskladite ih u "
+"Podešavanjima pre premeštanja kolačića."
+
+msgid "The rule could not be saved. Please try again."
+msgstr "Pravilo nije sačuvano. Pokušajte ponovo."
+
+msgid ""
+"The record could not be saved. Review Settings before retrying; a rule "
+"change may already have been saved."
+msgstr ""
+"Zapis nije sačuvan. Pregledajte Podešavanja pre ponovnog pokušaja; promena "
+"pravila je možda već sačuvana."
+
+msgid ""
+"Recorded cookies and configured patterns, not a live browser cookie list. "
+"Cookie values are never stored. A category change does not change the "
+"category of a linked script or service."
+msgstr ""
+"Evidentirani kolačići i podešeni obrasci, a ne živa lista kolačića iz "
+"pregledača. Vrednosti kolačića se ne čuvaju. Promena kategorije ne menja "
+"kategoriju povezane skripte ili servisa."
+
+msgid ""
+"Server control required: server and HttpOnly records are informational only."
+" Their category does not block or delete them. Existing removal rules remain"
+" visible in Settings."
+msgstr ""
+"Serverska kontrola potrebna: serverski i HttpOnly zapisi su samo "
+"informativni. Njihova kategorija ih ne blokira niti briše. Postojeća pravila"
+" uklanjanja ostaju vidljiva u Podešavanjima."
+
+msgid "Cookie / pattern"
+msgstr "Kolačić / obrazac"
+
+msgid "Service / domain"
+msgstr "Servis / domen"
+
+msgid "Related rule / source"
+msgstr "Povezano pravilo / izvor"
+
+msgid "Server control required"
+msgstr "Serverska kontrola potrebna"
+
+msgid "Required to remember consent"
+msgstr "Obavezan za pamćenje saglasnosti"
+
+msgid "Edit"
+msgstr "Izmeni"
+
+msgid "No recorded cookies in this category."
+msgstr "Nema evidentiranih kolačića u ovoj kategoriji."
+
+msgid "Add cookie record"
+msgstr "Dodaj zapis kolačića"
+
+msgid "Review blocking rules and Consent version in Settings."
+msgstr "Pregledajte pravila blokiranja i Verziju saglasnosti u Podešavanjima."
+
+msgid "Service"
+msgstr "Servis"
+
+msgid "Domain"
+msgstr "Domen"
+
+msgid "Server-set cookie (record only)"
+msgstr "Serverski kolačić (samo evidencija)"
+
+msgid "Linked script / iframe rule (optional)"
+msgstr "Povezano pravilo skripte / iframe-a (opciono)"
+
+msgid "None"
+msgstr "Nema"
+
+msgid "This edit updates the matching pattern for every cookie it covers:"
+msgstr "Ova izmena menja odgovarajući obrazac za svaki kolačić koji obuhvata:"
+
+msgid "Save"
+msgstr "Sačuvaj"
+
+msgid "Save record"
+msgstr "Sačuvaj zapis"
+
+msgid "The record could not be saved. Please try again."
+msgstr "Zapis nije sačuvan. Pokušajte ponovo."
