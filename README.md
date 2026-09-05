@@ -136,6 +136,8 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 
 ## Screenshots
 
+Captured from MB Cookie Consent 1.2.0 in a local WordPress demo. Scanner findings and inventory entries are illustrative demo data, not production audit results.
+
 ### Consent banner
 
 ![English consent banner](.wordpress-org/screenshot-1.png)
@@ -150,11 +152,19 @@ Dozvoljene kategorije su `preferences`, `analytics` i `marketing`.
 
 ### Cookie inventory and editing
 
-![WordPress administratorska podešavanja na srpskom](.wordpress-org/screenshot-4.png)
+![Cookies grouped by category, including informational HttpOnly records](.wordpress-org/screenshot-4.png)
 
 ### Manual scanner
 
 ![Manual cookie scanner](.wordpress-org/screenshot-5.png)
+
+### Edit a cookie record
+
+![Expanded Edit form with category and linked-rule options](.wordpress-org/screenshot-6.png)
+
+### Administratorska podešavanja na srpskom
+
+![Srpski latinica: podešavanja i objedinjeni meni](.wordpress-org/screenshot-7.png)
 
 ## Changelog
 

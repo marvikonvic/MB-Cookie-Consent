@@ -77,12 +77,15 @@ Use shortcode `[mbcc_cookie_settings]`.
 
 == Screenshots ==
 
-Screenshots show the current 1.2.0 interface, including the unified admin menu, cookie inventory and manual scanner.
+Screenshots show the 1.2.0 interface in a local WordPress demo. Scanner findings and inventory entries are illustrative demo data.
 
 1. Consent banner with accept, reject and cookie-settings controls.
 2. Granular cookie-settings dialog with four consent categories.
 3. WordPress administration settings for language, appearance and consent behavior.
-4. Serbian Latin translation of the WordPress administration settings.
+4. Cookie inventory grouped by category, including informational HttpOnly records.
+5. Manual scanner with category suggestions and administrator review.
+6. Expanded Edit form for a cookie record.
+7. Serbian Latin translation of settings and the unified administration menu.
 
 == Changelog ==
 
