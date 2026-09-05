@@ -8,7 +8,14 @@ const {execFileSync} = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const php = process.env.PHP_BINARY || 'php';
 const rendered = execFileSync(php, ['-r', `define('ABSPATH', '.'); function wp_json_encode($v){return json_encode($v);} require 'includes/class-mbcc-frontend.php'; (new MBCC_Frontend(array('consent_version'=>'1.0','google_consent_mode'=>true)))->render_consent_mode();`], {cwd: root, encoding: 'utf8'});
-const early = rendered.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1];
+// This is an exact fixture contract, not an HTML parser or sanitizer.
+const opening = '<script data-mbcc-essential>';
+const closing = '</script>';
+const markup = rendered.trim();
+assert.ok(markup.startsWith(opening), 'Renderer must emit the expected essential script');
+assert.ok(markup.endsWith(closing), 'Renderer must close the expected script');
+const early = markup.slice(opening.length, -closing.length);
+assert.equal(early.toLowerCase().includes('</script'), false, 'Fixture must contain only one script');
 const source = fs.readFileSync(path.join(root, 'assets/js/frontend.js'), 'utf8');
 function productionFunction(name) {
     return source.match(new RegExp('    function ' + name + '\\([^]*?\\n    \\}'))[0];
